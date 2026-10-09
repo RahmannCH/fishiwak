@@ -306,7 +306,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <!-- Logs -->
     <div class="section-title" style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
       <span>Riwayat Log</span>
-      <button class="btn-sm" style="padding:4px 8px;font-size:10.5px;background:#1e3a8a;border-color:#3b82f6;" onclick="exportIndexLogsCsv()">📥 Unduh CSV</button>
+      <button class="btn-sm" style="padding:4px 8px;font-size:10.5px;background:#1e3a8a;border-color:#3b82f6;" onclick="exportIndexLogsCsv()">📊 Unduh Excel</button>
     </div>
     <div class="log-box" id="logBox">
       <div class="log-item"><span class="log-icon">🚀</span> <span>Sistem UI/UX tingkat lanjut diinisialisasi. Siap untuk simulasi.</span></div>
@@ -1333,21 +1333,52 @@ function exportIndexLogsCsv() {
     alert('Log eksekusi masih kosong!');
     return;
   }
-  let csv = 'No,Aktivitas_Log\n';
+  
+  let tableRows = '';
   items.forEach((item, idx) => {
-    let text = item.innerText.replace(/"/g, '""').trim();
-    csv += `${idx + 1},"${text}"\n`;
+    let text = item.innerText.trim();
+    tableRows += `<tr>
+      <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${idx + 1}</td>
+      <td style="border:1px solid #cbd5e1; padding:6px;">${text}</td>
+    </tr>\n`;
   });
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  
+  let excelTemplate = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+    <meta charset="utf-8">
+    <style>
+      table { border-collapse: collapse; width: 100%; font-family: Calibri, sans-serif; }
+      th { background-color: #1e3a8a; color: #ffffff; font-weight: bold; border: 1px solid #000000; padding: 10px; font-size: 11pt; text-align: center; }
+    </style>
+    </head>
+    <body>
+      <h2>Riwayat Log Eksekusi A* (${activeMode.toUpperCase()})</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50px;">No</th>
+            <th>Aktivitas Log</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `;
+  
+  const blob = new Blob([excelTemplate], { type: 'application/vnd.ms-excel;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `Log_AStar_${activeMode.toUpperCase()}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `Log_AStar_${activeMode.toUpperCase()}_${new Date().toISOString().slice(0,10)}.xls`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  addLog('📥 File CSV riwayat log eksekusi A* berhasil diunduh!', '💾');
+  addLog('📊 File Excel riwayat log eksekusi A* berhasil diunduh!', '💾');
 }
 
 let isIndexSpotlight = false;
