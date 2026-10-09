@@ -36,7 +36,36 @@ function pos(level,index,total){const y=86+level*155,w=Math.min(1030,Math.max(0,
 function resizeMap(){const levels=Math.floor(Math.log2(Math.max(1,nodes.length-1)))+2;$('map').style.height=Math.max(650,110+levels*160)+'px'}
 function dijkstra(from){let q=[{id:from,d:0}],best={[from]:0};while(q.length){q.sort((a,b)=>a.d-b.d);const c=q.shift();if(c.id===goalId)return c.d;if(c.d!==best[c.id])continue;for(const k of adj(c.id)){const nd=c.d+k.cost;if(best[k.id]===undefined||nd<best[k.id]){best[k.id]=nd;q.push({id:k.id,d:nd})}}}return Infinity}
 function autoH(){  let mode = $('hmode').value;  if(mode === 'manual') return;  const target = N(goalId);  nodes.forEach(n=>{    if(n.id === goalId) { n.h = 0; return; }    if(mode === 'euclidean') {      n.h = Math.round(Math.hypot(n.x - target.x, n.y - target.y) / 45);    } else {      n.h = dijkstra(n.id);    }  });}
-function build(){const n=Math.max(3,Math.min(10,+$('count').value||5));$('count').value=n;nodes=[{...START}];edges=[];for(let i=1;i<=n;i++){const level=Math.floor(Math.log2(i))+1,first=2**(level-1),total=Math.min(2**(level-1),n-first+1),p=pos(level,i-first,total),a=ASSETS[Math.floor(Math.random()*ASSETS.length)];nodes.push({id:'N'+i,name:a[0],img:a[1],x:p.x,y:p.y,h:0})}for(let i=1;i<=n;i++)edges.push({u:i===1?'S':'N'+Math.floor(i/2),v:'N'+i,cost:2+Math.floor(Math.random()*5)});for(let i=2;i<=n;i++){const sibling=i%2===0?i+1:i-1;if(sibling<=n&&!E('N'+i,'N'+sibling))edges.push({u:'N'+i,v:'N'+sibling,cost:2+Math.floor(Math.random()*6)});if(i>3&&Math.random()<.25){const target=1+Math.floor(Math.random()*(i-2));if(target!==Math.floor(i/2)&&!E('N'+i,'N'+target))edges.push({u:'N'+i,v:'N'+target,cost:3+Math.floor(Math.random()*6)})}}goalId='N'+n;populateGoals();autoH();render();reset();log('Graf semi-bercabang dibuat: Kos Kan + '+n+' bangunan.')}
+function build(){
+  const n = Math.max(3, Math.min(10, +$('count').value || 5));
+  $('count').value = n;
+  nodes = [{...START}];
+  edges = [];
+  const shuffled = [...ASSETS].sort(() => Math.random() - 0.5);
+  for(let i = 1; i <= n; i++){
+    let level = Math.floor(Math.log2(i)) + 1;
+    let first = 2**(level - 1);
+    let total = Math.min(2**(level - 1), n - first + 1);
+    let p = pos(level, i - first, total);
+    let a = shuffled[(i - 1) % shuffled.length];
+    nodes.push({ id: 'N' + i, name: a[0], img: a[1], x: p.x, y: p.y, h: 0 });
+  }
+  for(let i = 1; i <= n; i++){
+    edges.push({ u: i === 1 ? 'S' : 'N' + Math.floor(i / 2), v: 'N' + i, cost: 2 + Math.floor(Math.random() * 5) });
+  }
+  if(n >= 3) {
+    edges.push({ u: 'N1', v: 'N2', cost: 2 + Math.floor(Math.random() * 4) });
+  }
+  if(n >= 6) {
+    edges.push({ u: 'N3', v: 'N4', cost: 3 + Math.floor(Math.random() * 4) });
+  }
+  goalId = 'N' + n;
+  populateGoals();
+  autoH();
+  render();
+  reset();
+  log('🌳 Graf cabang minimalis dibuat: Kos Kan + ' + n + ' bangunan.');
+}
 function populateGoals(){$('goal').innerHTML=nodes.filter(n=>n.id!=='S').map(n=>`<option value="${n.id}" ${n.id===goalId?'selected':''}>${n.id} - ${n.name}</option>`).join('')}
 function render(){resizeMap();svg.innerHTML='';layer.innerHTML='';for(const e of edges){const a=N(e.u),b=N(e.v),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;for(const cls of ['road','dash','active-road']){const z=document.createElementNS('http://www.w3.org/2000/svg','line');z.setAttribute('x1',a.x);z.setAttribute('y1',a.y);z.setAttribute('x2',b.x);z.setAttribute('y2',b.y);z.setAttribute('class',cls);if(cls==='active-road')z.id='p-'+e.u+'-'+e.v;svg.appendChild(z)}const gr=document.createElementNS('http://www.w3.org/2000/svg','g');gr.setAttribute('class','badge');gr.setAttribute('transform',`translate(${mx},${my})`);gr.onclick=()=>edgeClick(e);const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',-31);r.setAttribute('y',-12);r.setAttribute('width',62);r.setAttribute('height',24);gr.appendChild(r);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',0);t.setAttribute('y',1);t.textContent='cost:'+e.cost;gr.appendChild(t);svg.appendChild(gr)}for(const n of nodes){const d=document.createElement('div');d.className='node';d.id='n-'+n.id;d.style.left=n.x+'px';d.style.top=n.y+'px';d.onclick=()=>nodeClick(n);const img=document.createElement('img');img.src=BASE+n.img;img.onerror=()=>img.outerHTML=`<div class="placeholder">${n.name}<br>aset belum ada</div>`;d.appendChild(img);const c=document.createElement('div');c.className='card';c.id='c-'+n.id;c.innerHTML=`<div class="name">${n.id}: ${n.name}</div><span id="m-${n.id}">g=? h=${n.h}<br>f=?</span>`;d.appendChild(c);layer.appendChild(d)}visual()}
 function visual(current){for(const n of nodes){const root=$('n-'+n.id),card=$('c-'+n.id),metric=$('m-'+n.id);if(!root)return;root.className='node';card.className='card';if(n.id==='S')root.classList.add('start');if(n.id===goalId)root.classList.add('goal');if(selectedNode===n.id)root.classList.add('selected');metric.innerHTML=g[n.id]!==undefined?`g=${g[n.id]} h=${n.h}<br><span style="color:#fde047">f=${f[n.id]}</span>`:`g=? h=${n.h}<br>f=?`;if(path.includes(n.id))root.classList.add('path');else if(n.id===current)root.classList.add('current');else if(closed.has(n.id))root.classList.add('closed');else if(open.some(x=>x.id===n.id))root.classList.add('frontier')}}
