@@ -16,7 +16,7 @@ Metode pencarian heuristik (*informed search*) adalah cabang fundamental kecerda
 Untuk menjawab tantangan tersebut secara menyeluruh, aplikasi dirancang memiliki 3 modul pengujian independen dalam satu antarmuka aplikasi web dinamis:
 1. **Modul 1 (Default): Lab Pohon Heuristik (Custom):** Pembuktian sifat konsistensi dan kemampuan manipulasi dinamis bobot lintasan (*edge*) serta heuristik secara *Click-to-Edit*, dilengkapi mekanisme penanganan otomatis *Re-Opening Closed Nodes*.
 2. **Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost):** Simulasi kurir menempuh rintangan spasial (Jalan Aspal = 1, Lumpur = 3, Sungai = 5, Tembok = $\infty$) dengan pembanding metrik *Manhattan* ($L_1$) dan *Euclidean* ($L_2$).
-3. **Modul 3: TSP Logistik (Pengiriman Realistis):** Simulasi perjalanan tur kurir multi-pelanggan kembali ke gudang (*drag & drop map*) dengan panduan heuristik *Minimum Spanning Tree* (MST) untuk membuktikan penghematan bahan bakar A* terhadap rute serakah (*Greedy*).
+3. **Modul 3: TSP Logistik (Pengiriman Realistis):** Simulasi tur kurir yang wajib mengunjungi semua toko lalu kembali ke gudang. Jaringan jalan tetap dengan cost tiap edge yang dapat diedit, dan heuristik MST dihitung menggunakan jarak terpendek pada jaringan jalan tersebut.
 
 ---
 
@@ -29,8 +29,9 @@ $$f(n) = g(n) + h(n)$$
 2. **$h(n)$ (Heuristic Cost):** Estimasi biaya terendah untuk mencapai kondisi Goal dari simpul $n$.
 3. **Syarat Admissibility:** Agar A* dijamin menghasilkan solusi optimal (terpendek mutlak), nilai $h(n)$ harus memenuhi $h(n) \le h^*(n)$ di mana $h^*(n)$ adalah jarak nyata minimum yang sesungguhnya.
 
-- **Greedy Best-First ($f = h$):** Bersifat *myopic* (rabun). Agen hanya tergiur oleh simpul yang tampak terdekat saat ini tanpa memedulikan akumulasi beban jarak yang telah dilalui ($g$). Sering kali terjebak dalam rute berbiaya tinggi (*Heuristic Trap*).
-- **A* Search ($f = g + h$):** Memperhitungkan akumulasi $g(n)$ yang sudah dikeluarkan. Jika suatu cabang di awal tampak dekat namun memiliki medan berat di tengah jalan, A* secara otomatis berbalik arah (*backtracking/pruning*) untuk mencari alternatif yang secara absolut lebih murah.
+- A* Search ($f = g + h$) memilih state dengan estimasi total terendah, memakai biaya aktual $g(n)$ dan estimasi sisa $h(n)$.
+- Heuristik otomatis aplikasi admissible. Mode manual tersedia untuk eksperimen; optimalitas hanya terjamin jika nilai $h(n)$ tidak melebih-lebihkan biaya minimum sebenarnya.
+- Jika rute lebih murah ditemukan ke node tertutup, node dibuka kembali dan dimasukkan ke Open List.
 
 ---
 
@@ -43,14 +44,13 @@ $$f(n) = g(n) + h(n)$$
 ### B. Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost)
 - **Matriks Biaya Langkah:** Aspal ($c = 1$), Lumpur ($c = 3$), Sungai ($c = 5$), Tembok ($c = \infty$).
 - Saat rintangan sungai menghalangi garis lurus antara kurir dan tujuan:
-  - *Greedy Best-First:* Menerjang sungai secara membabi-buta karena tergiur nilai $h(n)$ yang mengecil. Menghasilkan total biaya yang sangat boros.
-  - *A\* Search:* Menguji rute memutar melalui aspal. Karena biaya putaran ($1+1+1$) terakumulasi lebih rendah dibanding masuk sungai ($+5$), A* dengan cerdas bermanuver menghindari rintangan mahal.
+  - *A* Search:* Menguji rute memutar melalui aspal. Karena biaya putaran ($1+1+1$) terakumulasi lebih rendah dibanding masuk sungai ($+5$), A* memilih rute dengan total biaya terendah.
 
 ### C. Modul 3: Pengayaan TSP (Traveling Salesperson Problem) Multi-Drop
 - **Ruang Keadaan (State):** $\text{State}(n) = (\text{Lokasi\_Kurir\_Saat\_Ini}, \text{Daftar\_Pelanggan\_Yang\_Telah\_Dikunjungi})$.
 - **Heuristik MST Prim:**
   $$h(n) = \min_{u \in U} \text{dist}(c, u) + \text{Bobot MST}(U) + \min_{u \in U} \text{dist}(u, \text{Gudang})$$
-- Visualisasi diangkat ke standar profesional: Titik logistik dapat digeser secara dinamis, sistem menampilkan jaringan koneksi jalan beserta angka radius geometrisnya, dan animasi rute disempurnakan dengan kehadiran ikon truk kurir yang bergerak mulus sepanjang tur optimal. Algoritma akan menghitung secara latar belakang (*background check*) seberapa besar A* mampu menghemat jarak dan bahan bakar dibandingkan *Greedy*.
+- Visualisasi memakai jaringan jalan statis. Setiap jalan memiliki cost yang dapat diedit pengguna, sementara A* menghitung jarak perjalanan antar lokasi melalui rute jalan terpendek. Animasi truk mengikuti edge jalan nyata pada tur optimal.
 
 ---
 
@@ -62,13 +62,13 @@ $$f(n) = g(n) + h(n)$$
    - Jalankan A* dan peragakan mekanisme mesinnya mendeteksi pembengkakan biaya $f(n)$ lalu membatalkan rute tersebut (*pruning* rute mahal).
 3. **Demo Grid Logistik (Medan Berat):**
    - Buat rintangan Sungai (+5) di tengah jalur dengan menggunakan *brush toolbar*.
-   - Jalankan **Greedy** &rarr; Tunjukkan agen nekat menerobos sungai karena rabun heuristik.
-   - Jalankan **A\*** &rarr; Buktikan AI menghindari sungai dan memutar lewat aspal demi penghematan.
+   - Jalankan **A*** dengan mode Step &rarr; Tunjukkan bagaimana perubahan cost medan memengaruhi nilai $g(n)$ dan $f(n)$.
+   - Buktikan A* memilih rute aspal dengan total cost terendah, bukan sekadar jarak geometris terdekat.
 4. **Demo TSP Logistik Pengiriman Nyata:**
-   - Pindahkan titik-titik toko/pelanggan dan Gudang menggunakan tetikus secara leluasa.
-   - Eksekusi simulasi dan tunjukkan animasi kurir (Truk) menjalankan tugas pengirimannya, serta sebutkan perbandingan penghematan biaya bahan bakar di akhir iterasi.
+   - Edit cost pada badge jaringan jalan untuk mensimulasikan jalan lancar atau macet.
+   - Eksekusi simulasi dan tunjukkan animasi truk yang mengikuti edge jalan hingga semua toko dikunjungi lalu kembali ke gudang.
 
 ---
 
 ## 5. Kesimpulan
-Aplikasi web ini menyatukan pemodelan graf akademik, navigasi medan berbobot, dan penyelesaian logistik nyata TSP (*Traveling Salesperson*) dalam satu kesatuan kode. Berdasarkan seluruh uji kasus, sistem komputasi berhasil membuktikan bahwa A* Search senantiasa mendominasi keefisienan biaya (*Cost*) mutlak atas pendekatan sederhana (*Greedy Best-First*).
+Aplikasi web ini menyatukan pemodelan graf akademik, navigasi medan berbobot, dan TSP pada jaringan jalan statis dalam satu antarmuka. Fokus implementasi adalah A* Search dengan evaluasi $f(n)=g(n)+h(n)$ dan heuristik admissible untuk jaminan rute optimal.

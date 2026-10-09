@@ -22,7 +22,6 @@
   --color-frontier: #eab308;
   --color-path: #22c55e; 
   --color-visited: #475569;
-  --color-greedy: #f97316;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
@@ -96,7 +95,6 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 .canvas-svg { width: 100%; height: 100%; max-width: 1000px; max-height: 700px; }
 .edge { stroke: #334155; stroke-width: 2.5; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .edge.path { stroke: var(--color-path); stroke-width: 5; filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.7)); }
-.edge.greedy-path { stroke: var(--color-greedy); stroke-width: 4; stroke-dasharray: 8,8; filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.6)); animation: marching 1s linear infinite; }
 @keyframes marching { to { stroke-dashoffset: -16; } }
 .edge.explored { stroke: #38bdf8; stroke-width: 3.5; opacity: 0.8; }
 .edge-weight-bg { fill: #0f172a; rx: 6; stroke: #475569; stroke-width: 1.5; cursor: pointer; transition: 0.2s; }
@@ -117,7 +115,6 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 .node-group.current .node-circle { stroke: var(--color-active); stroke-width: 5; fill: #0c4a6e; filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.9)); animation: pulse-ring 2s infinite; }
 @keyframes pulse-ring { 0% { filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.6)); } 50% { filter: drop-shadow(0 0 25px rgba(14, 165, 233, 1)); } 100% { filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.6)); } }
 .node-group.path .node-circle { fill: #14532d; stroke: var(--color-path); stroke-width: 5; filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.9)); }
-.node-group.greedy-path .node-circle { fill: #7c2d12; stroke: var(--color-greedy); stroke-width: 4; filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.7)); }
 
 /* Grid 2D Area */
 .grid-wrapper { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 10px; }
@@ -154,7 +151,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 .tsp-truck { position: absolute; width: 40px; height: 40px; font-size: 24px; transform: translate(-50%, -50%); z-index: 20; transition: left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); pointer-events: none; opacity: 0; display: flex; justify-content: center; align-items: center; background: white; border-radius: 50%; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
 .tsp-truck.active { opacity: 1; }
 
-.tsp-point { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; cursor: grab; z-index: 10; transition: left 0.1s, top 0.1s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.tsp-point { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; cursor: default; z-index: 10; transition: left 0.1s, top 0.1s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .tsp-point:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.15); }
 .tsp-icon-bg { display: flex; justify-content: center; align-items: center; border-radius: 50%; box-shadow: 0 6px 15px rgba(0,0,0,0.6); border: 2px solid; transition: all 0.3s; }
 
@@ -189,6 +186,8 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+@media (max-width: 900px){body{overflow:auto}.navbar{height:auto;min-height:64px;padding:12px;align-items:flex-start;gap:10px;flex-wrap:wrap}.brand{font-size:14px}.badge{font-size:9px;padding:4px 8px}.tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.tab-btn{min-height:44px;white-space:nowrap;font-size:11px;padding:8px 12px}.main-wrapper{height:auto;display:block}.sidebar{width:100%;max-height:none;border-right:0;border-bottom:1px solid var(--border-light)}.workspace{min-height:760px;padding:10px}.view-container{position:relative;min-height:740px}.legend{position:fixed;right:8px;bottom:8px;padding:9px;font-size:10px;gap:6px}.tsp-map{width:900px;height:620px}.grid-canvas{transform-origin:top left}.info-panel{position:relative;inset:auto;margin:12px}.modal{width:min(360px,calc(100vw - 24px))}.btn{min-height:44px}}
+@media (max-width:520px){.brand{width:100%;font-size:12px}.brand svg{width:20px;height:20px}.section{padding:16px}.stats-grid{grid-template-columns:1fr 1fr}.log-box{min-height:180px}.workspace{min-height:620px}.view-container{min-height:610px}.grid-wrapper{width:100%;padding:8px;overflow:auto;align-items:flex-start}.grid-toolbar{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;border-radius:8px;padding:8px}.grid-canvas{transform:none}.cell{width:clamp(16px,4.3vw,23px);height:clamp(16px,4.3vw,23px);font-size:8px}.tsp-map{width:100%;height:520px;min-height:520px}.legend{display:none}.tsp-point .tsp-label{font-size:9px;max-width:90px;overflow:hidden;text-overflow:ellipsis}.tabs .tab-btn{flex:0 0 auto}.navbar{overflow:hidden}.modal-overlay{padding:12px}.modal{width:min(360px,100%)}}
 </style>
 </head>
 <body>
@@ -213,10 +212,10 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <!-- Config Engine -->
     <div class="section">
       <div class="section-title">Konfigurasi AI Engine</div>
-      <select id="algoSelect">
+      <select id="algoSelect" disabled aria-label="Algoritma aktif">
         <option value="astar">A* Search (f = g + h) — Termurah / Optimal</option>
-        <option value="greedy">Greedy Best-First (f = h) — Cepat / Sub-optimal</option>
       </select>
+      <div style="font-size:11.5px; color:#94a3b8; line-height:1.5;">Simulasi ini fokus 100% pada A*. Open List selalu memilih state dengan nilai <code>f(n)</code> terendah.</div>
       
       <!-- Panel Config Dinamis tergantung Tab -->
       <div id="configTree" style="margin-top: 14px;">
@@ -235,12 +234,12 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
       </div>
 
       <div id="configTsp" style="display: none; margin-top: 14px;">
-        <div class="section-title" style="margin-bottom: 10px;">Kontrol Pelanggan Nyata</div>
+        <div class="section-title" style="margin-bottom: 10px;">Jaringan Jalan Statis</div>
         <div style="display: flex; gap: 10px;">
-          <button class="btn-sm" onclick="addCustomer()">+ Tambah Pelanggan</button>
-          <button class="btn-sm" onclick="randomizeCustomers()">🎲 Acak Rute</button>
+          <button class="btn-sm" onclick="randomizeTspRoadCosts()">🎲 Acak Cost Jalan</button>
+          <button class="btn-sm" onclick="resetTspRoadCosts()">↻ Reset Jalan</button>
         </div>
-        <div style="font-size:11.5px; color:#94a3b8; margin-top:10px; line-height:1.5;">*Tarik (drag) ikon rumah atau gudang untuk memindahkan koordinat logistik secara leluasa.</div>
+        <div style="font-size:11.5px; color:#94a3b8; margin-top:10px; line-height:1.5;">Klik badge cost di peta untuk mengubah waktu tempuh jalan. Rute hanya melewati jalan yang tergambar.</div>
       </div>
     </div>
 
@@ -345,7 +344,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <div class="view-container" id="viewTsp">
       <div class="tsp-map" id="tspMap">
         <div class="tsp-grid-bg"></div>
-        <svg class="canvas-svg tsp-svg" id="tspSvg"></svg>
+        <svg class="canvas-svg tsp-svg" id="tspSvg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
         <div id="tspPointsContainer"></div>
         <div id="tspTruck" class="tsp-truck">🚚</div>
       </div>
@@ -358,7 +357,6 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
       <div class="leg-row"><div class="leg-dot" style="background:var(--color-active); box-shadow: 0 0 10px var(--color-active);"></div>Node Dievaluasi Saat Ini</div>
       <div class="leg-row"><div class="leg-dot" style="background:transparent; border: 2px solid var(--color-frontier);"></div>Frontier / Antrean Terbuka</div>
       <div class="leg-row"><div class="leg-dot" style="background:var(--color-path); box-shadow: 0 0 10px var(--color-path);"></div>Rute A* (Termurah / Optimal)</div>
-      <div class="leg-row"><div class="leg-dot" style="background:var(--color-greedy); box-shadow: 0 0 10px var(--color-greedy);"></div>Rute Greedy (Sub-Optimal)</div>
     </div>
 
   </div>
@@ -453,13 +451,21 @@ let gridWeights = {}; // key: "r,c" -> cost
 let gridTool = 'wall';
 
 let tspNodes = [
-  { id: 0, type: 'depot', x: 50, y: 50, name: "Gudang Logistik" },
-  { id: 1, type: 'customer', x: 20, y: 30, name: "Toko A" },
-  { id: 2, type: 'customer', x: 80, y: 25, name: "Toko B" },
-  { id: 3, type: 'customer', x: 75, y: 75, name: "Toko C" },
-  { id: 4, type: 'customer', x: 25, y: 70, name: "Toko D" }
+  { id: 0, type: 'depot', x: 50, y: 12, name: "Gudang Kos Kan" },
+  { id: 1, type: 'customer', x: 25, y: 34, name: "Toko Bengkel" },
+  { id: 2, type: 'customer', x: 75, y: 34, name: "Toko Pecel" },
+  { id: 3, type: 'customer', x: 82, y: 70, name: "Toko Rental PS" },
+  { id: 4, type: 'customer', x: 50, y: 86, name: "Toko Kelontong" },
+  { id: 5, type: 'customer', x: 18, y: 70, name: "Pos Ronda" }
 ];
-let tspNextId = 5;
+let tspRoads = [
+  { u: 0, v: 1, cost: 4 }, { u: 0, v: 2, cost: 5 },
+  { u: 1, v: 2, cost: 3 }, { u: 1, v: 5, cost: 4 },
+  { u: 2, v: 3, cost: 4 }, { u: 2, v: 4, cost: 6 },
+  { u: 3, v: 4, cost: 3 }, { u: 4, v: 5, cost: 4 },
+  { u: 5, v: 0, cost: 5 }
+];
+let tspNextId = 6;
 
 /** =========================================================================
  * GLOBAL STATE
@@ -557,10 +563,10 @@ function switchTab(mode) {
   if (inTitle && inText) {
     if (mode === 'grid') {
       inTitle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; vertical-align:text-bottom; flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> Info Logistik Grid 2D`;
-      inText.innerHTML = `<b>Non-Uniform Cost Search:</b> Gambarlah Lumpur (+3) atau Sungai (+5) di tengah jalur.<br><br>Greedy akan nekat menerjang lumpur karena rabun (hanya melihat sisa <code>h(n)</code>), sementara A* akan cerdas memutar lewat aspal jika total akumulasi <code>g(n)</code> terbukti lebih murah!`;
+      inText.innerHTML = `<b>Non-Uniform Cost Search:</b> Gambarlah Lumpur (+3) atau Sungai (+5) di tengah jalur.<br><br>A* membandingkan biaya aktual <code>g(n)</code> dan estimasi <code>h(n)</code>, lalu memilih rute dengan <code>f(n)=g(n)+h(n)</code> terendah.`;
     } else if (mode === 'tree') {
       inTitle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; vertical-align:text-bottom; flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> Info Lab Pohon Heuristik`;
-      inText.innerHTML = `Klik angka bobot pada garis untuk mengubah biaya lintasan. Klik simpul untuk mengubah nilai Heuristik <b>h(n)</b> secara interaktif.<br><br><b>Keunggulan A*:</b> Dilengkapi fitur <b>Re-Opening Closed Nodes</b> untuk menjamin rute tetap optimal mutlak meski heuristik manual dibuat inkonsisten!`;
+      inText.innerHTML = `Klik angka bobot pada garis untuk mengubah biaya lintasan. Klik simpul untuk mengubah nilai Heuristik <b>h(n)</b> secara interaktif.<br><br><b>A*:</b> Memilih state dengan <code>f(n)=g(n)+h(n)</code> terendah. Mode otomatis menjamin heuristik admissible; mode manual menandai jika jaminan optimalitas tidak dapat dipastikan.`;
     } else if (mode === 'tsp') {
       inTitle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; vertical-align:text-bottom; flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> Info TSP Realistis`;
       inText.innerHTML = `<b>State:</b> <code>(Lokasi_Kurir, Daftar_Selesai)</code><br><b>Heuristik A*:</b> <code>Minimum Spanning Tree (MST)</code>.<br><br>A* menjamin rute putaran pengiriman ke seluruh toko dan kembali ke gudang dengan jarak terpendek tanpa ledakan komputasi <i>Brute-Force</i>.`;
@@ -580,17 +586,11 @@ function addLog(msg, icon = '🔸') {
 function clearLog() { logBox.innerHTML = ''; }
 
 function updateMath(curr, g, h, f) {
-  let formula = algo === 'astar' 
-    ? `<div class="math-line"><span>Biaya Tempuh Riil (g)</span> <span>${g.toFixed(1)}</span></div>
-       <div class="math-line"><span>Estimasi Heuristik (h)</span> <span>${h.toFixed(1)}</span></div>
-       <div class="math-line math-total"><span>f(n) = g + h</span> <span>${f.toFixed(1)}</span></div>`
-    : `<div class="math-line"><span>Estimasi Heuristik (h)</span> <span>${h.toFixed(1)}</span></div>
-       <div class="math-line" style="color:var(--text-dim); text-decoration:line-through;"><span>Biaya Tempuh (g)</span> <span>Diabaikan</span></div>
-       <div class="math-line math-total" style="color:var(--color-greedy);"><span>f(n) = h</span> <span>${f.toFixed(1)}</span></div>`;
-       
   mathInspector.innerHTML = `
-    <div style="color:white; font-weight:800; margin-bottom:12px; font-size:14px; text-shadow:0 0 10px rgba(255,255,255,0.3);">EVALUASI: ${curr}</div>
-    ${formula}
+    <div style="color:white; font-weight:800; margin-bottom:12px; font-size:14px;">EVALUASI: ${curr}</div>
+    <div class="math-line"><span>Biaya Tempuh Riil (g)</span><span>${g.toFixed(1)}</span></div>
+    <div class="math-line"><span>Estimasi Heuristik (h)</span><span>${h.toFixed(1)}</span></div>
+    <div class="math-line math-total"><span>f(n) = g + h</span><span>${f.toFixed(1)}</span></div>
   `;
 }
 
@@ -791,7 +791,7 @@ function initGridSearch() {
   drawGridBase();
   const sid = `${gridStart.r},${gridStart.c}`;
   const h = calcGridH(gridStart.r, gridStart.c);
-  const f = algo === 'astar' ? h : h; // g=0
+  const f = h; // g=0
   
   gScore[sid] = 0; fScore[sid] = f;
   frontier.push({ id: sid, r: gridStart.r, c: gridStart.c, g: 0, h: h, f: f });
@@ -820,7 +820,7 @@ function processGridStep(current) {
   if (r === gridGoal.r && c === gridGoal.c) {
     isFinished = true;
     statCost.textContent = g;
-    statCost.classList.add(algo==='astar' ? 'optimal' : '');
+    statCost.classList.add('optimal');
     
     let curr = cid;
     while(curr && curr !== `${gridStart.r},${gridStart.c}`) {
@@ -830,8 +830,7 @@ function processGridStep(current) {
     optimalPath.forEach(pid => { if (pid !== `${gridGoal.r},${gridGoal.c}`) updateGridUI(pid, 'path'); });
     
     addLog(`<span class="log-ok">🎯 GOAL TERCAPAI!</span> Total Biaya Perjalanan: <b>${g}</b> (${optimalPath.length} langkah).`, '🏁');
-    if (algo === 'greedy') addLog(`<span class="log-warn">💡 Peringatan:</span> Karena Greedy hanya melihat h(n), ia menembus rute lumpur mahal secara sub-optimal.`, '📉');
-    else addLog(`<span class="log-ok">💡 Bukti Kehebatan A*:</span> A* cerdas menghindari rute berat di tengah jalan dan terjamin memilih rute aspal termurah mutlak!`, '📈');
+    addLog(`<span class="log-ok">💡 A* mengevaluasi biaya aktual dan heuristik, lalu memilih rute dengan total biaya terendah.</span>`, '📈');
     endSim();
     return;
   }
@@ -848,7 +847,7 @@ function processGridStep(current) {
     
     const tentativeG = g + cellWeight;
     const h = calcGridH(nr, nc);
-    const f = algo === 'astar' ? (tentativeG + h) : h;
+    const f = tentativeG + h;
     
     if (!gScore.hasOwnProperty(nid) || tentativeG < gScore[nid]) {
       cameFrom[nid] = cid;
@@ -929,7 +928,7 @@ function initTreeSearch() {
   
   const start = 'A';
   const h = TREE_NODES[start].h;
-  const f = algo === 'astar' ? (0 + h) : h;
+  const f = h;
   gScore[start] = 0; fScore[start] = f;
   frontier.push({ id: start, g: 0, h: h, f: f, parent: null });
   updateGraphUI('tree', start, TREE_NODES, true);
@@ -956,7 +955,7 @@ function updateGraphUI(mode, activeId, nodes, isInit=false) {
     if (id === 'A') cls += ' start';
     else if (id === goalId) cls += ' goal';
 
-    if (optimalPath.includes(id)) cls += ` ${algo==='astar'?'path':'greedy-path'}`;
+    if (optimalPath.includes(id)) cls += ' path';
     else if (id === activeId && !isInit) cls += ' current';
     else if (visited.has(id)) cls += ' visited';
     else if (frontier.contains(id)) cls += ' frontier';
@@ -969,16 +968,12 @@ function processTreeStep(current, nodes, edges, goalId) {
   const mode = activeMode;
   const cid = current.id;
   
-  if (cid === 'C' && algo === 'greedy' && mode === 'tree') {
-    addLog(`<span class="log-warn">⚠️ Greedy Trap!</span> Memilih Node C karena h(C)=1 tampak terdekat tanpa melihat jalan aslinya.`, '🚨');
-  } else {
-    addLog(`🔍 Ekspansi Simpul <span class="log-hl">${cid}</span> (f = <b>${current.f}</b>)`, '🔎');
-  }
+  addLog(`🔍 Ekspansi Simpul <span class="log-hl">${cid}</span> (g=${current.g}, h=${current.h}, f=<b>${current.f}</b>)`, '🔎');
 
   if (cid === goalId) {
     isFinished = true;
     statCost.textContent = current.g;
-    statCost.classList.add(algo==='astar' ? 'optimal' : '');
+    statCost.classList.add('optimal');
     
     let curr = cid;
     while(curr) { optimalPath.push(curr); curr = cameFrom[curr]; }
@@ -986,7 +981,7 @@ function processTreeStep(current, nodes, edges, goalId) {
     
     for (let i = 0; i < optimalPath.length - 1; i++) {
       const e = document.getElementById(`edge-${mode}-${optimalPath[i]}-${optimalPath[i+1]}`);
-      if (e) e.setAttribute('class', `edge ${algo==='astar'?'path':'greedy-path'}`);
+      if (e) e.setAttribute('class', 'edge path');
     }
     
     updateGraphUI(mode, null, nodes);
@@ -995,27 +990,33 @@ function processTreeStep(current, nodes, edges, goalId) {
     return;
   }
 
-  const children = edges.filter(e => e.u === cid).map(e => ({ id: e.v, w: e.w }));
+  const children = edges
+    .filter(e => e.u === cid || e.v === cid)
+    .map(e => ({ id: e.u === cid ? e.v : e.u, w: e.w }));
   children.forEach(c => {
     const nid = c.id;
     const tentativeG = gScore[cid] + c.w;
     const h = nodes[nid].h;
-    const f = algo === 'astar' ? (tentativeG + h) : h;
+    const f = tentativeG + h;
 
-    const edgeEl = document.getElementById(`edge-${mode}-${cid}-${nid}`);
-    if (edgeEl) edgeEl.setAttribute('class', 'edge explored');
+      const edgeEl = document.getElementById(`edge-${mode}-${cid}-${nid}`) || document.getElementById(`edge-${mode}-${nid}-${cid}`);
+      if (edgeEl) edgeEl.setAttribute('class', 'edge explored');
 
     if (!gScore.hasOwnProperty(nid) || tentativeG < gScore[nid]) {
       cameFrom[nid] = cid;
       gScore[nid] = tentativeG;
       fScore[nid] = f;
       const nodeObj = { id: nid, g: tentativeG, h: h, f: f };
-      if (!frontier.contains(nid) && !visited.has(nid)) {
-        frontier.push(nodeObj);
-        addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Masuk Antrean: <b>${nid}</b> (f=${f})`, '📥');
-      } else if (frontier.contains(nid)) {
+      if (frontier.contains(nid)) {
         frontier.update(nodeObj);
         addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Update Cost Rute Baru: <b>${nid}</b> (f=${f})`, '🔄');
+      } else if (visited.has(nid)) {
+        visited.delete(nid);
+        frontier.push(nodeObj);
+        addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Re-open Closed Node: <b>${nid}</b> (f=${f})`, '🔓');
+      } else {
+        frontier.push(nodeObj);
+        addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Masuk Antrean: <b>${nid}</b> (f=${f})`, '📥');
       }
     }
   });
@@ -1035,141 +1036,111 @@ function renderTspPoints() {
     const el = document.createElement('div');
     el.className = `tsp-point ${node.type}`;
     el.id = `tsp-${node.id}`;
-    el.style.left = `${node.x}%`; el.style.top = `${node.y}%`;
-    
+    el.style.left = `${node.x}%`;
+    el.style.top = `${node.y}%`;
     const iconBg = document.createElement('div');
     iconBg.className = 'tsp-icon-bg';
     iconBg.textContent = node.id === 0 ? '🏢' : '🏡';
     el.appendChild(iconBg);
-    
     const lbl = document.createElement('div');
-    lbl.className = 'tsp-label'; lbl.textContent = node.name;
+    lbl.className = 'tsp-label';
+    lbl.textContent = node.name;
     el.appendChild(lbl);
-    
-    let isDragging = false;
-    el.onmousedown = (e) => {
-      if(isRunning || isFinished) {
-          addLog('⚠️ Pergerakan logistik dikunci saat simulasi rute berjalan. Tekan Reset.', '🛑');
-          return;
-      }
-      isDragging = true; el.style.zIndex = 100;
-      
-      const mapRect = document.getElementById('tspMap').getBoundingClientRect();
-      const moveHandler = (ev) => {
-        if (!isDragging) return;
-        let nx = ((ev.clientX - mapRect.left) / mapRect.width) * 100;
-        let ny = ((ev.clientY - mapRect.top) / mapRect.height) * 100;
-        nx = Math.max(5, Math.min(95, nx)); ny = Math.max(5, Math.min(95, ny));
-        el.style.left = `${nx}%`; el.style.top = `${ny}%`;
-        node.x = nx; node.y = ny;
-        drawTspNetwork(); // Redraw roads instantly
-      };
-      const upHandler = () => {
-        isDragging = false; el.style.zIndex = node.id === 0 ? 10 : 5;
-        document.removeEventListener('mousemove', moveHandler);
-        document.removeEventListener('mouseup', upHandler);
-        resetSim();
-      };
-      document.addEventListener('mousemove', moveHandler);
-      document.addEventListener('mouseup', upHandler);
-    };
     tspContainer.appendChild(el);
   });
 }
 
+function getTspNode(id) { return tspNodes.find(node => node.id === id); }
+function getTspRoad(a, b) { return tspRoads.find(road => (road.u === a && road.v === b) || (road.u === b && road.v === a)); }
+function tspNeighbors(id) {
+  return tspRoads.filter(road => road.u === id || road.v === id)
+    .map(road => ({ id: road.u === id ? road.v : road.u, cost: road.cost }));
+}
+function shortestRoad(from, to) {
+  const queue = [{ id: from, cost: 0, path: [from] }];
+  const best = { [from]: 0 };
+  while (queue.length) {
+    queue.sort((a, b) => a.cost - b.cost);
+    const current = queue.shift();
+    if (current.id === to) return current;
+    if (current.cost !== best[current.id]) continue;
+    tspNeighbors(current.id).forEach(next => {
+      const cost = current.cost + next.cost;
+      if (best[next.id] === undefined || cost < best[next.id]) {
+        best[next.id] = cost;
+        queue.push({ id: next.id, cost, path: [...current.path, next.id] });
+      }
+    });
+  }
+  return { id: to, cost: Infinity, path: [] };
+}
 function drawTspNetwork() {
   tspSvg.innerHTML = '';
-  // Draw all possible roads lightly
-  for(let i=0; i<tspNodes.length; i++) {
-    for(let j=i+1; j<tspNodes.length; j++) {
-      const n1 = tspNodes[i]; const n2 = tspNodes[j];
-      const dist = getTspDist(n1, n2).toFixed(1);
-      
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', `${n1.x}%`); line.setAttribute('y1', `${n1.y}%`);
-      line.setAttribute('x2', `${n2.x}%`); line.setAttribute('y2', `${n2.y}%`);
-      line.setAttribute('class', 'tsp-road-line');
-      tspSvg.appendChild(line);
-      
-      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      txt.setAttribute('x', `${(n1.x + n2.x)/2}%`); txt.setAttribute('y', `${(n1.y + n2.y)/2}%`);
-      txt.setAttribute('class', 'tsp-road-label');
-      txt.textContent = `${dist}km`;
-      tspSvg.appendChild(txt);
-    }
-  }
+  tspRoads.forEach(road => {
+    const n1 = getTspNode(road.u);
+    const n2 = getTspNode(road.v);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', n1.x); line.setAttribute('y1', n1.y);
+    line.setAttribute('x2', n2.x); line.setAttribute('y2', n2.y);
+    line.setAttribute('class', 'tsp-road-line');
+    tspSvg.appendChild(line);
+    const badge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    badge.style.cursor = 'pointer';
+    badge.setAttribute('transform', `translate(${(n1.x + n2.x) / 2}, ${(n1.y + n2.y) / 2})`);
+    badge.onclick = () => openTspRoadModal(road);
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', -22); rect.setAttribute('y', -11); rect.setAttribute('width', 44); rect.setAttribute('height', 22);
+    rect.setAttribute('rx', 5); rect.setAttribute('fill', '#0f172a'); rect.setAttribute('stroke', '#38bdf8');
+    badge.appendChild(rect);
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'tsp-road-label'); label.setAttribute('y', 1);
+    label.textContent = `${road.cost} km`;
+    badge.appendChild(label);
+    tspSvg.appendChild(badge);
+  });
 }
-
 function initTspDrag() { renderTspPoints(); drawTspNetwork(); }
-
-function addCustomer() {
-  if (tspNodes.length >= 7) { addLog('⚠️ Maksimal 7 titik (O(N!) complexity) agar A* berjalan aman.', '🛑'); return; }
-  tspNodes.push({
-    id: tspNextId++, type: 'customer', x: 15 + Math.random()*70, y: 15 + Math.random()*70,
-    name: `Toko ${String.fromCharCode(64 + tspNextId - 1)}`
-  });
-  resetSim(); renderTspPoints(); drawTspNetwork();
-  addLog(`✅ Toko pelanggan baru ditambahkan. Total: ${tspNodes.length-1} alamat.`, '📍');
+function randomizeTspRoadCosts() {
+  tspRoads.forEach(road => { road.cost = 2 + Math.floor(Math.random() * 8); });
+  resetSim();
+  addLog('🎲 Cost seluruh jalan raya diacak. Heuristik MST dihitung ulang.', '🛣️');
+}
+function resetTspRoadCosts() {
+  const defaults = [4, 5, 3, 4, 4, 6, 3, 4, 5];
+  tspRoads.forEach((road, index) => { road.cost = defaults[index]; });
+  resetSim();
+  addLog('↻ Cost jalan raya dikembalikan ke skenario awal.', '🛣️');
+}
+function openTspRoadModal(road) {
+  if (isRunning || isFinished) return;
+  activeEditTarget = { type: 'tsp-road', road };
+  modalTitle.textContent = `Ubah Cost Jalan (${getTspNode(road.u).name} ↔ ${getTspNode(road.v).name})`;
+  modalInput.value = road.cost;
+  editModal.classList.add('active');
+  modalInput.focus();
+  modalInput.select();
 }
 
-function randomizeCustomers() {
-  tspNodes.forEach(n => { if (n.id !== 0) { n.x = 10 + Math.random()*80; n.y = 10 + Math.random()*80; } });
-  resetSim(); renderTspPoints(); drawTspNetwork();
-  addLog(`🎲 Posisi logistik diacak. Peta jalan diperbarui.`, '🔄');
+function tspDistance(from, to) {
+  return shortestRoad(from, to).cost;
 }
-
-function getTspDist(n1, n2) {
-  const dx = n1.x - n2.x; const dy = n1.y - n2.y;
-  return Math.sqrt(dx*dx + dy*dy) * 0.4; // Realistic km multiplier
-}
-
 function mstHeuristic(currentId, unvisitedIds) {
-  if (unvisitedIds.length === 0) return getTspDist(tspNodes.find(n=>n.id===currentId), tspNodes[0]); 
-  let mstCost = 0; let inMst = [unvisitedIds[0]]; let pqMst = [];
-  
-  const addEdges = (uId) => {
-    const uNode = tspNodes.find(n=>n.id===uId);
-    unvisitedIds.forEach(vId => {
-      if (!inMst.includes(vId)) pqMst.push({cost: getTspDist(uNode, tspNodes.find(n=>n.id===vId)), v: vId});
-    });
-    pqMst.sort((a,b) => a.cost - b.cost);
-  };
-  
-  addEdges(unvisitedIds[0]);
-  while(inMst.length < unvisitedIds.length && pqMst.length > 0) {
-    const edge = pqMst.shift();
-    if (!inMst.includes(edge.v)) { inMst.push(edge.v); mstCost += edge.cost; addEdges(edge.v); }
+  if (!unvisitedIds.length) return tspDistance(currentId, 0);
+  let mstCost = 0;
+  const tree = new Set([unvisitedIds[0]]);
+  while (tree.size < unvisitedIds.length) {
+    let best = { cost: Infinity, id: null };
+    for (const u of tree) for (const v of unvisitedIds) if (!tree.has(v)) {
+      const cost = tspDistance(u, v);
+      if (cost < best.cost) best = { cost, id: v };
+    }
+    if (best.id === null || !Number.isFinite(best.cost)) return Infinity;
+    tree.add(best.id);
+    mstCost += best.cost;
   }
-  
-  const currNode = tspNodes.find(n=>n.id===currentId);
-  let minToUniv = Infinity;
-  unvisitedIds.forEach(vid => {
-    let d = getTspDist(currNode, tspNodes.find(n=>n.id===vid));
-    if (d < minToUniv) minToUniv = d;
-  });
-  
-  let minToDepot = Infinity;
-  unvisitedIds.forEach(vid => {
-    let d = getTspDist(tspNodes.find(n=>n.id===vid), tspNodes[0]);
-    if (d < minToDepot) minToDepot = d;
-  });
-  
-  return minToUniv + mstCost + minToDepot;
-}
-
-function runGreedyTspSilently() {
-  let unv = tspNodes.map(n=>n.id).filter(id=>id!==0);
-  let curr = 0; let totalG = 0;
-  while(unv.length > 0) {
-    let bestNext = null; let minDist = Infinity;
-    unv.forEach(u => {
-      let d = getTspDist(tspNodes.find(n=>n.id===curr), tspNodes.find(n=>n.id===u));
-      if(d < minDist) { minDist = d; bestNext = u; }
-    });
-    totalG += minDist; curr = bestNext; unv = unv.filter(id => id !== bestNext);
-  }
-  totalG += getTspDist(tspNodes.find(n=>n.id===curr), tspNodes[0]);
-  return totalG;
+  const enter = Math.min(...unvisitedIds.map(id => tspDistance(currentId, id)));
+  const leave = Math.min(...unvisitedIds.map(id => tspDistance(id, 0)));
+  return enter + mstCost + leave;
 }
 
 function initTspSearch() {
@@ -1180,7 +1151,7 @@ function initTspSearch() {
   const startId = 0;
   const initialUnvisited = tspNodes.filter(n => n.id !== 0).map(n => n.id);
   const h = mstHeuristic(startId, initialUnvisited);
-  const f = algo === 'astar' ? h : h; // g=0
+  const f = h;
   
   const initialState = {
     id: startId, path: [startId], unvisited: initialUnvisited,
@@ -1193,36 +1164,45 @@ function initTspSearch() {
   addLog(`✅ Peta Logistik siap. Estimasi awal MST <b>${h.toFixed(1)} km</b>.`, '📦');
 }
 
-function updateTspSvgPath(pathArr, isFinal=false) {
-  // Hanya gambar garis path pencarian, jalan jaringan tetap ada
-  const existingPath = document.getElementById('activeSearchPath');
-  if(existingPath) existingPath.remove();
-  
-  if (pathArr.length < 2) return;
-  let d = '';
-  for(let i=0; i<pathArr.length; i++) {
-    const node = tspNodes.find(n=>n.id===pathArr[i]);
-    if(i===0) d += `M ${node.x}% ${node.y}% `; else d += `L ${node.x}% ${node.y}% `;
+function expandTspRoadPath(stopIds) {
+  const expanded = [];
+  for (let i = 0; i < stopIds.length - 1; i++) {
+    const leg = shortestRoad(stopIds[i], stopIds[i + 1]).path;
+    if (!leg.length) return [];
+    expanded.push(...(i ? leg.slice(1) : leg));
   }
+  return expanded;
+}
+
+function updateTspSvgPath(pathArr, isFinal=false) {
+  const existingPath = document.getElementById('activeSearchPath');
+  if (existingPath) existingPath.remove();
+  if (pathArr.length < 2) return;
+  const roadPath = expandTspRoadPath(pathArr);
+  if (!roadPath.length) return;
+  const d = roadPath.map((id, i) => {
+    const node = getTspNode(id);
+    return `${i ? 'L' : 'M'} ${node.x} ${node.y}`;
+  }).join(' ');
   const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   pathEl.setAttribute('d', d);
   pathEl.setAttribute('id', 'activeSearchPath');
   pathEl.setAttribute('class', `tsp-path-line ${isFinal ? 'final' : ''}`);
-  if (!isFinal && algo === 'greedy') pathEl.style.stroke = 'var(--color-greedy)';
-  if (isFinal && algo === 'greedy') { pathEl.style.stroke = 'var(--color-greedy)'; pathEl.style.filter = 'drop-shadow(0 0 15px rgba(249, 115, 22, 0.8))'; }
   tspSvg.appendChild(pathEl);
 }
 
-function animateTruck(pathArr) {
+function animateTruck(stopIds) {
+  const roadPath = expandTspRoadPath(stopIds);
+  if (!roadPath.length) return;
   tspTruck.classList.add('active');
   let step = 0;
   const move = () => {
-    if(step >= pathArr.length) return;
-    const node = tspNodes.find(n=>n.id===pathArr[step]);
+    if (step >= roadPath.length) return;
+    const node = getTspNode(roadPath[step]);
     tspTruck.style.left = `${node.x}%`;
     tspTruck.style.top = `${node.y}%`;
     step++;
-    if(step < pathArr.length) setTimeout(move, 800);
+    if (step < roadPath.length) setTimeout(move, 650);
   };
   move();
 }
@@ -1242,44 +1222,46 @@ function processTspStep(current) {
   if (unv.length === 0 && cid === 0 && path.length === tspNodes.length + 1) {
     isFinished = true;
     statCost.textContent = current.g.toFixed(1);
-    statCost.classList.add(algo==='astar' ? 'optimal' : '');
+    statCost.classList.add('optimal');
     updateTspSvgPath(path, true);
     animateTruck(path);
     
     addLog(`<span class="log-ok">🎯 TUR PENGIRIMAN SELESAI!</span> Total Jarak Aktual = <b>${current.g.toFixed(1)} km</b>`, '🏆');
     
-    if (algo === 'astar') {
-       let greedyG = runGreedyTspSilently();
-       if (greedyG > current.g + 0.1) {
-           let savings = ((greedyG - current.g) / greedyG * 100).toFixed(1);
-           addLog(`<span class="log-ok">💡 Efisiensi A*:</span> Rute Greedy terbukti makan jarak <b>${greedyG.toFixed(1)} km</b>. A* berhasil menghemat <b>${savings}%</b> biaya bahan bakar kurir!`, '⛽');
-       }
-    } else {
-       addLog(`<span class="log-warn">💡 Peringatan:</span> Kurir Greedy terjebak titik terdekat di awal, boros di perjalanan akhir. Coba A* untuk memperbaikinya!`, '📉');
-    }
+    addLog(`<span class="log-ok">💡 A* selesai:</span> Semua toko telah dikunjungi dan kurir kembali ke gudang melalui jaringan jalan yang tersedia.`, '⛽');
     endSim(); return;
   }
   
   if (unv.length === 0 && cid !== 0) {
-    const stepDist = getTspDist(tspNodes.find(n=>n.id===cid), tspNodes[0]);
+    const stepDist = tspDistance(cid, 0);
     const tentativeG = current.g + stepDist;
-    const f = algo === 'astar' ? tentativeG : 0;
-    frontier.push({ id: 0, path: [...path, 0], unvisited: [], g: tentativeG, h: 0, f: f, stateKey: `0-` });
+    const f = tentativeG;
+    const returnState = { id: 0, path: [...path, 0], unvisited: [], g: tentativeG, h: 0, f, stateKey: '0-' };
+    gScore[returnState.stateKey] = tentativeG;
+    const queued = frontier.toArray().find(state => state.stateKey === returnState.stateKey);
+    if (queued) Object.assign(queued, returnState);
+    else frontier.push(returnState);
     return;
   }
 
   unv.forEach(nextId => {
-    const stepDist = getTspDist(tspNodes.find(n=>n.id===cid), tspNodes.find(n=>n.id===nextId));
+    const leg = shortestRoad(cid, nextId);
+    const stepDist = leg.cost;
+    if (!Number.isFinite(stepDist)) return;
     const tentativeG = current.g + stepDist;
     const nextUnv = unv.filter(id => id !== nextId);
     const h = mstHeuristic(nextId, nextUnv);
-    const f = algo === 'astar' ? (tentativeG + h) : h;
+    const f = tentativeG + h;
     
     const nextStateKey = `${nextId}-${nextUnv.sort().join(',')}`;
     if (!gScore.hasOwnProperty(nextStateKey) || tentativeG < gScore[nextStateKey]) {
       gScore[nextStateKey] = tentativeG;
-      frontier.push({ id: nextId, path: [...path, nextId], unvisited: nextUnv, g: tentativeG, h: h, f: f, stateKey: nextStateKey });
-      addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Penilaian Rute: ke <b>${tspNodes.find(n=>n.id===nextId).name}</b> (f=${f.toFixed(1)})`, '📋');
+      const state = { id: nextId, path: [...path, nextId], unvisited: nextUnv, g: tentativeG, h, f, stateKey: nextStateKey };
+      const queued = frontier.toArray().find(item => item.stateKey === nextStateKey);
+      if (queued) Object.assign(queued, state);
+      else frontier.push(state);
+      frontier.items.sort((a, b) => a.f - b.f || b.g - a.g);
+      addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Penilaian rute jalan ke <b>${tspNodes.find(n=>n.id===nextId).name}</b> (g=${tentativeG.toFixed(1)}, h=${h.toFixed(1)}, f=${f.toFixed(1)})`, '📋');
     }
   });
 }
@@ -1306,8 +1288,12 @@ function saveModalEdit() {
   if (isNaN(val) || val < 0) val = (activeEditTarget.type==='edge') ? 1 : 0;
   
   if (activeEditTarget.type === 'edge') {
-    const e = TREE_EDGES.find(x => x.u === activeEditTarget.u && x.v === activeEditTarget.v);
-    if (e) { e.w = val; addLog(`✍️ Bobot edge <b>(${e.u} → ${e.v})</b> diubah jadi <b>+${val}</b>.`, '✏️'); }
+    const e = TREE_EDGES.find(x => (x.u === activeEditTarget.u && x.v === activeEditTarget.v) || (x.u === activeEditTarget.v && x.v === activeEditTarget.u));
+    if (e) { e.w = Math.max(1, val); addLog(`✍️ Bobot edge <b>(${e.u} ↔ ${e.v})</b> diubah jadi <b>${e.w}</b>.`, '✏️'); }
+  } else if (activeEditTarget.type === 'tsp-road') {
+    activeEditTarget.road.cost = Math.max(1, val);
+    addLog(`✍️ Cost jalan TSP <b>${getTspNode(activeEditTarget.road.u).name} ↔ ${getTspNode(activeEditTarget.road.v).name}</b> diubah jadi <b>${activeEditTarget.road.cost} km</b>.`, '🛣️');
+    drawTspNetwork();
   } else {
     TREE_NODES[activeEditTarget.u].h = val;
     addLog(`✍️ Heuristik <b>Node ${activeEditTarget.u}</b> diubah jadi <b>h=${val}</b>.`, '✏️');
