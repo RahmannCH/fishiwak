@@ -8,9 +8,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@600;700&family=Press+Start+2P&display=swap');
 :root{--bg:#07111f;--panel:#0d1a2d;--line:#344e68;--text:#eff7ff;--muted:#9ab0c7;--cyan:#38bdf8;--green:#22c55e;--yellow:#facc15;--red:#fb4c54}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 15%,#1c4669,#061120 55%);color:var(--text);font-family:Inter;height:100vh;overflow:hidden}.top{height:70px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;background:#081426f2;border-bottom:1px solid #31506b}.title{font:15px 'Press Start 2P';line-height:1.55;text-shadow:2px 2px #000}.title b{color:var(--yellow)}.back{color:#c8ecff;text-decoration:none;font-weight:800;border:1px solid #385b7a;padding:9px 12px;border-radius:8px}.app{height:calc(100vh - 70px);display:grid;grid-template-columns:390px 1fr}.side{background:#0a1729ef;border-right:1px solid #29455e;overflow:auto;padding:18px}.group{padding:15px 0;border-bottom:1px solid #223951}.label{font-size:10px;font-weight:800;letter-spacing:1px;color:#90a8c1;text-transform:uppercase;margin-bottom:8px}.row{display:flex;gap:8px}.row>*{flex:1}input,select{width:100%;padding:9px;background:#071323;border:1px solid #365470;border-radius:7px;color:white;font:700 12px Inter}.btn{border:1px solid #476887;background:#172b43;color:#fff;padding:10px 8px;border-radius:7px;font:800 11px Inter;cursor:pointer}.btn:hover{filter:brightness(1.2)}.btn.active{outline:2px solid var(--yellow);background:#66500c}.primary{background:#2168d8;border-color:#65b5fa}.danger{background:#bd2530;border-color:#ff7780}.hint{color:#8da3ba;font-size:11px;line-height:1.45;margin-top:8px}.status{font:700 11px 'JetBrains Mono';padding:10px;border:1px solid #305270;border-left:4px solid var(--cyan);background:#071323;border-radius:7px;line-height:1.55}.warn{color:#facc15}.ok{color:#55e888}.error{color:#ff8b93}.work{overflow:auto;padding:18px}.map{position:relative;width:1240px;min-height:720px;margin:auto;background:linear-gradient(135deg,#0d2a3a,#133950);border:1px solid #3b5c76;border-radius:16px;overflow:visible;box-shadow:inset 0 0 80px #0009}.map:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#ffffff15 1px,transparent 1px);background-size:25px 25px;pointer-events:none}.map svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible}.road{stroke:#435b71;stroke-width:22;stroke-linecap:round;filter:drop-shadow(0 8px 5px #0008);cursor:pointer}.dash{stroke:#aab8c6;stroke-width:3;stroke-dasharray:12 12;pointer-events:none}.active-road{stroke:var(--green);stroke-width:7;stroke-dasharray:14 9;opacity:0;filter:drop-shadow(0 0 8px var(--green));animation:run 1s linear infinite;pointer-events:none}.active-road.on{opacity:1}.active-road.scout{stroke:var(--cyan);opacity:1;stroke-width:5;stroke-dasharray:8 8}@keyframes run{to{stroke-dashoffset:-23}}.badge{cursor:pointer}.badge rect{fill:#071323;stroke:#83a4c1;stroke-width:2;rx:7}.badge text{fill:white;font:700 11px 'JetBrains Mono';text-anchor:middle;dominant-baseline:central}.node{position:absolute;width:138px;text-align:center;transform:translate(-50%,-50%);z-index:5;cursor:pointer;transition:.2s}.node:hover{transform:translate(-50%,-50%) scale(1.05);z-index:9}.node img,.placeholder{width:112px;height:82px;object-fit:cover;border:3px solid #607c96;border-radius:10px;box-shadow:0 10px 16px #0009}.placeholder{display:grid;place-items:center;background:#20364b;color:#bed7ee;font-weight:800;padding:8px}.card{display:inline-block;min-width:110px;margin-top:-5px;padding:5px 7px;background:#061120ef;border:2px solid #668198;border-radius:7px;font:700 10px 'JetBrains Mono';line-height:1.45}.name{font:700 9px Inter;color:#eaf5ff}.start .card{border-color:#34d399;color:#82f1c3}.goal .card{border-color:#fb5b65;color:#ffb0b5}.frontier .card{border-color:var(--yellow);box-shadow:0 0 12px #facc1590}.current .card{border-color:var(--cyan);box-shadow:0 0 17px var(--cyan);transform:scale(1.1)}.closed .card{opacity:.68}.path .card{border-color:var(--green);background:#075d3b;box-shadow:0 0 15px var(--green)}.selected .card{border-color:#facc15;box-shadow:0 0 18px #facc15}.fish{position:absolute;width:72px;height:72px;transform:translate(-50%,-75%);z-index:15;opacity:0;pointer-events:none;transition:left .55s ease-in-out,top .55s ease-in-out;filter:drop-shadow(0 12px 8px #000)}.fish.show{opacity:1}.fish img{width:100%;height:100%;object-fit:contain;border-radius:50%}.legend{position:fixed;right:24px;bottom:20px;background:#091629ed;border:1px solid #365773;border-radius:10px;padding:11px;font-size:11px;line-height:1.75;z-index:20}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}.tableWrap{max-height:265px;overflow:auto;border:1px solid #31506b;border-radius:8px;background:#050d18}.trace{border-collapse:collapse;width:100%;font:10px 'JetBrains Mono'}.trace th{position:sticky;top:0;background:#1a3048;color:#fff}.trace td,.trace th{border:1px solid #29445e;padding:6px;text-align:left;white-space:nowrap}.queue{font:11px 'JetBrains Mono';background:#050d18;border:1px solid #29445e;padding:10px;border-radius:7px;line-height:1.55;max-height:125px;overflow:auto}.modal{display:none;position:fixed;inset:0;place-items:center;background:#000b;z-index:50}.modal.on{display:grid}.modal>div{width:330px;background:#0b192c;border:3px solid var(--cyan);padding:20px}.modal h3{font-size:14px;line-height:1.5}.modal .row{margin-top:12px}@media(max-width:850px){body{overflow:auto}.app{grid-template-columns:1fr;height:auto}.side{max-height:none}.top{height:auto;padding:14px;gap:10px}.work{min-height:760px}.legend{display:none}}
 @media (max-width: 850px){body{overflow:auto}.top{height:auto;min-height:64px;padding:12px 14px;gap:12px;align-items:flex-start}.title{font-size:10px}.back{font-size:11px;padding:8px}.app{display:block;height:auto}.side{width:100%;max-height:none;border-right:0;border-bottom:1px solid #29455e;padding:14px}.group{padding:12px 0}.work{min-height:720px;padding:12px;overflow:auto}.map{margin:0;width:1100px;min-height:700px}.legend{position:fixed;right:10px;bottom:10px;font-size:10px;padding:8px;line-height:1.5}.tableWrap{max-height:220px}.trace{font-size:9px}.trace td,.trace th{padding:5px}.btn{min-height:44px}.row{flex-wrap:wrap}.row>*{min-width:120px}.title b{display:block;margin-top:3px}}
+
+/* Spotlight Presentation Mode & Audio & Particles */
+.spotlight .side { display: none !important; }
+.spotlight .app { grid-template-columns: 1fr !important; }
+.spotlight .spotlight-hud { display: flex !important; }
+.spotlight-hud { display: none; position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15,23,42,0.92); border: 2px solid var(--cyan); border-radius: 12px; padding: 10px 18px; gap: 10px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); align-items: center; }
+.spotlight-hud .btn { padding: 10px 16px; font-size: 12px; }
+#fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 25; }
+
 </style></head>
 <body>
-<header class="top"><div class="title">A* PATHFINDING<br><b>SIM_FISH_SHOES</b></div><a class="back" href="index.html">← Kembali ke Lab A*</a></header>
+<header class="top">
+  <div class="title">A* PATHFINDING<br><b>SIM_FISH_SHOES</b></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="back" id="btnAudio" style="cursor:pointer;background:#0d1a2d;" title="Nyalakan/Matikan Suara 8-Bit">🔊 Suara: ON</button>
+    <button class="back" id="btnSpotlight" style="cursor:pointer;background:#0d1a2d;" title="Fokus Layar Penuh untuk Proyektor">📽️ Presentasi</button>
+    <a class="back" href="index.html">← Kembali ke Lab A*</a>
+  </div>
+</header>
 <main class="app"><aside class="side">
 <div class="group"><div class="label">1. Bangun Graf Bangunan</div><div class="row"><div><div class="label">Node tambahan</div><input id="count" type="number" min="3" max="10" value="5"></div><div><div class="label">Goal</div><select id="goal"></select></div></div><div class="row" style="margin-top:9px"><button class="btn primary" id="build">Bangun Graf</button><button class="btn" id="random">Acak Cost</button></div><div class="hint">Start permanen: <b>Kos Kan</b>. Jumlah node tidak menghitung Start. Foto bangunan dipilih acak dari aset lokal.</div></div>
 <div class="group"><div class="label">2. Editor Graf Manual</div><div class="row"><button class="btn" data-mode="add-edge">+ Tambah Jalan</button><button class="btn" data-mode="delete-edge">Hapus Jalan</button><button class="btn" data-mode="set-goal">Set Goal</button></div><div class="hint" id="editorHint">Pilih mode, lalu klik node/jalan pada peta. Mode tambah jalan: klik dua node berbeda.</div></div>
@@ -18,9 +34,28 @@
 <div class="group"><div class="label">4. Kontrol A*</div><div class="row"><button class="btn primary" id="play">Play</button><button class="btn" id="step">Step</button><button class="btn" id="back">Back</button><button class="btn danger" id="reset">Reset</button></div></div>
 <div class="group"><div class="label">Math Inspector</div><div class="status" id="math">Start: <b>Kos Kan</b><br>Formula: <b>f(n)=g(n)+h(n)</b></div></div>
 <div class="group"><div class="label">Open List</div><div class="queue" id="queue">[ S(f=0) ]</div></div>
-<div class="group"><div class="label">Trace A* Langkah demi Langkah</div><div class="tableWrap"><table class="trace"><thead><tr><th>#</th><th>State / Path</th><th>Edge</th><th>g(n)</th><th>h(n)</th><th>Perhitungan: g(n)+h(n)=f(n)</th><th>Open List</th><th>Closed</th><th>Keputusan</th></tr></thead><tbody id="trace"></tbody></table></div></div>
+<div class="group">
+  <div class="label" style="display:flex;justify-content:space-between;align-items:center;">
+    <span>Trace A* Langkah demi Langkah</span>
+  </div>
+  <button class="btn" id="btnCsv" style="margin-bottom:8px;width:100%;background:#1e3a8a;border-color:#3b82f6;font-size:11px;" title="Unduh tabel hasil runut iterasi ke Excel/CSV">📥 Unduh Tabel Trace (CSV)</button>
+  <div class="tableWrap"><table class="trace"><thead><tr><th>#</th><th>State / Path</th><th>Edge</th><th>g(n)</th><th>h(n)</th><th>Perhitungan: g(n)+h(n)=f(n)</th><th>Open List</th><th>Closed</th><th>Keputusan</th></tr></thead><tbody id="trace"></tbody></table></div></div>
 <div class="group"><div class="label">Status dan Log</div><div class="queue" id="log">Graf belum dibangun.</div></div>
-</aside><section class="work"><div class="map" id="map"><svg id="svg"></svg><div id="nodes"></div><div class="fish" id="fish"><img id="fishImg" src="assets/Current Path/Kanan.jpg"></div></div></section></main>
+</aside><section class="work">
+  <div class="map" id="map">
+    <svg id="svg"></svg>
+    <div id="nodes"></div>
+    <div class="fish" id="fish"><img id="fishImg" src="assets/Current Path/Kanan.jpg"></div>
+    <canvas id="fxCanvas"></canvas>
+  </div>
+  <div class="spotlight-hud" id="spotlightHud">
+    <button class="btn primary" id="hudPlay">▶ Play</button>
+    <button class="btn" id="hudStep">⏭ Step</button>
+    <button class="btn" id="hudBack">⏮ Back</button>
+    <button class="btn danger" id="hudReset">↻ Reset</button>
+    <button class="btn" id="hudExit" style="background:#475569;">✕ Tutup</button>
+  </div>
+</section></main>
 <div class="legend"><div><span class="dot" style="background:#34d399"></span>Start Kos Kan</div><div><span class="dot" style="background:#fb5b65"></span>Goal</div><div><span class="dot" style="background:#38bdf8"></span>Scout / Current</div><div><span class="dot" style="background:#facc15"></span>Open List</div><div><span class="dot" style="background:#22c55e"></span>Rute Final</div></div>
 <div class="modal" id="modal"><div><h3 id="modalTitle">Ubah Nilai</h3><input id="value" type="number" min="0" max="99"><div class="row"><button class="btn" id="cancel">Batal</button><button class="btn primary" id="save">Simpan</button></div></div></div>
 <script>
@@ -49,12 +84,191 @@ function queue(){$('queue').innerHTML=open.length?'[ '+open.map(x=>`<b>${x.id}</
 function list(items){return items.length?items.map(x=>x.id||x).join(', '):'-'}
 function trace(c,edgeName,decision){stepNo++;const tr=document.createElement('tr');tr.innerHTML=`<td>${stepNo}</td><td>${c.path}</td><td>${edgeName||'-'}</td><td>${c.g}</td><td>${c.h}</td><td>${c.g} + ${c.h} = <b>${c.f}</b></td><td>${list(open)}</td><td>${list([...closed])}</td><td>${decision}</td>`;$('trace').appendChild(tr);tr.scrollIntoView({block:'nearest'})}
 function play(){if(finished)return;if(running){running=false;clearInterval(timer);$('play').textContent='Play'}else{running=true;$('play').textContent='Pause';timer=setInterval(step,1100)}}
-function step(){if(finished)return;snapshot();if(!open.length){finished=true;log('<span class="error">Tidak ada rute menuju Goal.</span>');end();return}const c=open.shift();if(closed.has(c.id)&&c.g>g[c.id])return step();closed.add(c.id);$('math').innerHTML=`<b>${c.id}: ${N(c.id).name}</b><br>g(n)=${c.g}<br>h(n)=${c.h}<br><span style="color:#fde047;font-size:14px">f(n)=${c.g}+${c.h}=${c.f}</span>`;scoutTo(c.id);visual(c.id);trace(c,c.via||'',c.id===goalId?'Goal dipilih':'Expand');log('Evaluasi '+c.id+': g='+c.g+', h='+c.h+', f='+c.f);if(c.id===goalId){finished=true;let p=c.id;while(p){path.push(p);p=came[p]}path.reverse();visual();log('<span class="ok">Rute A*: '+path.join(' -> ')+' | Total Cost='+c.g+'</span>');animationTimer=setTimeout(animateFinal,700);end();return}for(const k of adj(c.id)){const ng=c.g+k.cost;if(g[k.id]===undefined||ng<g[k.id]){const state={id:k.id,g:ng,h:N(k.id).h,f:ng+N(k.id).h,path:c.path+'->'+k.id,via:c.id+'->'+k.id+' ('+k.cost+')'};came[k.id]=c.id;g[k.id]=ng;f[k.id]=state.f;const old=open.find(x=>x.id===k.id);if(old){Object.assign(old,state);open.sort((a,b)=>a.f-b.f||b.g-a.g);trace(state,state.via,'Update Open List')}else if(closed.has(k.id)){closed.delete(k.id);pq(state);trace(state,state.via,'Re-open Closed Node');log('<span class="warn">Re-open '+k.id+' karena rute lebih murah.</span>')}else{pq(state);trace(state,state.via,'Masuk Open List')}}}visual(c.id);queue()}
+function step(){if(finished)return;snapshot();if(!open.length){finished=true;log('<span class="error">Tidak ada rute menuju Goal.</span>');end();return}const c=open.shift();if(closed.has(c.id)&&c.g>g[c.id])return step();closed.add(c.id);$('math').innerHTML=`<b>${c.id}: ${N(c.id).name}</b><br>g(n)=${c.g}<br>h(n)=${c.h}<br><span style="color:#fde047;font-size:14px">f(n)=${c.g}+${c.h}=${c.f}</span>`;scoutTo(c.id); soundStep();visual(c.id);trace(c,c.via||'',c.id===goalId?'Goal dipilih':'Expand');log('Evaluasi '+c.id+': g='+c.g+', h='+c.h+', f='+c.f);if(c.id===goalId){finished=true;let p=c.id;while(p){path.push(p);p=came[p]}path.reverse();visual();log('<span class="ok">Rute A*: '+path.join(' -> ')+' | Total Cost='+c.g+'</span>');soundGoal(); const gNode = N(goalId); triggerGoalConfetti(gNode.x, gNode.y); animationTimer=setTimeout(animateFinal,700);end();return}for(const k of adj(c.id)){const ng=c.g+k.cost;if(g[k.id]===undefined||ng<g[k.id]){const state={id:k.id,g:ng,h:N(k.id).h,f:ng+N(k.id).h,path:c.path+'->'+k.id,via:c.id+'->'+k.id+' ('+k.cost+')'};came[k.id]=c.id;g[k.id]=ng;f[k.id]=state.f;const old=open.find(x=>x.id===k.id);if(old){Object.assign(old,state);open.sort((a,b)=>a.f-b.f||b.g-a.g);trace(state,state.via,'Update Open List')}else if(closed.has(k.id)){closed.delete(k.id);pq(state);trace(state,state.via,'Re-open Closed Node');log('<span class="warn">Re-open '+k.id+' karena rute lebih murah.</span>')}else{pq(state);trace(state,state.via,'Masuk Open List')}}}visual(c.id);queue()}
 function end(){running=false;clearInterval(timer);$('play').textContent='Play';$('play').disabled=true;$('step').disabled=true}
 function sprite(dx,dy){const a=Math.atan2(dy,dx)*180/Math.PI;const file=a>-22&&a<=22?'Kanan.jpg':a<=67&&a>22?'Serong Kanan Depan.jpg':a<=112&&a>67?'Hadap Depan.jpg':a<=157&&a>112?'Serong Kiri Depan.jpg':a>157||a<=-157?'Kiri.jpg':a<=-112&&a>-157?'Serong kiri belakang.jpg':a<=-67&&a>-112?'Belakang.jpg':'Serong Kanan belakang.jpg';return FBASE+file}
 function scoutTo(id){const target=N(id),oldId=fish.dataset.node||'S',old=N(oldId);fishImg.src=sprite(target.x-old.x,target.y-old.y);fish.classList.add('show');fish.style.left=target.x+'px';fish.style.top=target.y+'px';fish.dataset.node=id;document.querySelectorAll('.active-road.scout').forEach(x=>x.classList.remove('scout'));const e=E(oldId,id);if(e){const p=$('p-'+e.u+'-'+e.v)||$('p-'+e.v+'-'+e.u);if(p)p.classList.add('scout')}}
-function animateFinal(){let i=0,prev=N(path[0]);fish.style.transition='none';fish.style.left=prev.x+'px';fish.style.top=prev.y+'px';fish.dataset.node=prev.id;fish.classList.add('show');document.querySelectorAll('.active-road.scout').forEach(x=>x.classList.remove('scout'));log('Ikan kembali ke Kos Kan, lalu melewati rute optimal.');setTimeout(function walk(){if(i>=path.length-1)return;const next=N(path[++i]);fishImg.src=sprite(next.x-prev.x,next.y-prev.y);fish.style.transition='left .8s linear,top .8s linear';fish.style.left=next.x+'px';fish.style.top=next.y+'px';fish.dataset.node=next.id;const e=E(prev.id,next.id),p=$('p-'+e.u+'-'+e.v)||$('p-'+e.v+'-'+e.u);if(p)p.classList.add('on');prev=next;setTimeout(walk,1000)},450)}
+function animateFinal(){let i=0,prev=N(path[0]);fish.style.transition='none';fish.style.left=prev.x+'px';fish.style.top=prev.y+'px';fish.dataset.node=prev.id;fish.classList.add('show');document.querySelectorAll('.active-road.scout').forEach(x=>x.classList.remove('scout'));log('Ikan kembali ke Kos Kan, lalu melewati rute optimal.');setTimeout(function walk(){if(i>=path.length-1)return;const next=N(path[++i]);fishImg.src=sprite(next.x-prev.x,next.y-prev.y); soundWalk();fish.style.transition='left .8s linear,top .8s linear';fish.style.left=next.x+'px';fish.style.top=next.y+'px';fish.dataset.node=next.id;const e=E(prev.id,next.id),p=$('p-'+e.u+'-'+e.v)||$('p-'+e.v+'-'+e.u);if(p)p.classList.add('on');prev=next;setTimeout(walk,1000)},450)}
 function edit(type,obj){if(running||finished)return;editing={type,obj};$('modalTitle').innerHTML=type==='edge'?`Ubah Cost Jalan<br>${obj.u} <-> ${obj.v}`:`Ubah Heuristik<br>Node ${obj.id}`;$('value').value=type==='edge'?obj.cost:obj.h;$('modal').classList.add('on');$('value').focus();$('value').select()}
 function closeModal(){$('modal').classList.remove('on');editing=null}function save(){if(!editing)return;const v=Math.max(0,+$('value').value||0);if(editing.type==='edge'){editing.obj.cost=Math.max(1,v);if($('hmode').value!=='manual')autoH()}else editing.obj.h=v;closeModal();render();reset()}
-$('back').onclick=stepBack;for(const b of document.querySelectorAll('[data-mode]'))b.onclick=()=>setEditor(b.dataset.mode);$('build').onclick=build;$('random').onclick=()=>{edges.forEach(e=>e.cost=2+Math.floor(Math.random()*8));if($('hmode').value!=='manual')autoH();render();reset();log('Cost jalan diacak.')};$('hmode').onchange=()=>{if($('hmode').value!=='manual'){autoH();render();reset();log('Mode heuristik diubah. h(n) telah dikalkulasi ulang.');}else{log('<span class="warn">Mode manual aktif. Silakan klik node untuk mengedit h(n).</span>');}};$('goal').onchange=e=>{goalId=e.target.value;if($('hmode').value!=='manual')autoH();render();reset()};$('play').onclick=play;$('step').onclick=step;$('reset').onclick=()=>{render();reset()};$('cancel').onclick=closeModal;$('save').onclick=save;$('value').onkeydown=e=>e.key==='Enter'&&save();document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});build();
+$('back').onclick=stepBack;for(const b of document.querySelectorAll('[data-mode]'))b.onclick=()=>setEditor(b.dataset.mode);$('build').onclick=build;$('random').onclick=()=>{edges.forEach(e=>e.cost=2+Math.floor(Math.random()*8));if($('hmode').value!=='manual')autoH();render();reset();log('Cost jalan diacak.')};$('hmode').onchange=()=>{if($('hmode').value!=='manual'){autoH();render();reset();log('Mode heuristik diubah. h(n) telah dikalkulasi ulang.');}else{log('<span class="warn">Mode manual aktif. Silakan klik node untuk mengedit h(n).</span>');}};$('goal').onchange=e=>{goalId=e.target.value;if($('hmode').value!=='manual')autoH();render();reset()};$('play').onclick=play;$('step').onclick=step;$('reset').onclick=()=>{render();reset()};
+$('btnAudio').onclick = toggleAudio;
+$('btnSpotlight').onclick = toggleSpotlight;
+$('btnCsv').onclick = exportTraceCsv;
+
+$('hudPlay').onclick = play;
+$('hudStep').onclick = step;
+$('hudBack').onclick = stepBack;
+$('hudReset').onclick = () => { render(); reset(); };
+$('hudExit').onclick = toggleSpotlight;
+
+$('cancel').onclick=closeModal;$('save').onclick=save;$('value').onkeydown=e=>e.key==='Enter'&&save();document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+// ==========================================
+// PILAR 3: 8-BIT AUDIO SYNTHESIZER (WEB AUDIO)
+// ==========================================
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playTone(freq, type = 'square', duration = 0.08, gainVal = 0.04) {
+  if (!soundEnabled || !audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {}
+}
+
+function soundStep() {
+  initAudio();
+  playTone(440, 'square', 0.06, 0.04);
+  setTimeout(() => playTone(660, 'square', 0.07, 0.04), 50);
+}
+
+function soundWalk() {
+  initAudio();
+  playTone(280, 'triangle', 0.06, 0.05);
+}
+
+function soundGoal() {
+  initAudio();
+  const melody = [523.25, 659.25, 783.99, 1046.50];
+  melody.forEach((f, i) => {
+    setTimeout(() => playTone(f, 'square', 0.18, 0.06), i * 110);
+  });
+}
+
+function soundClick() {
+  initAudio();
+  playTone(320, 'sine', 0.04, 0.03);
+}
+
+function toggleAudio() {
+  soundEnabled = !soundEnabled;
+  $('btnAudio').textContent = soundEnabled ? '🔊 Suara: ON' : '🔇 Suara: OFF';
+  $('btnAudio').style.color = soundEnabled ? '#c8ecff' : '#94a3b8';
+  log(soundEnabled ? '🔊 Efek suara 8-bit diaktifkan.' : '🔇 Efek suara dinonaktifkan.');
+}
+
+// ==========================================
+// PILAR 3: WATER BUBBLE / VICTORY CONFETTI
+// ==========================================
+const fxCanvas = $('fxCanvas');
+const fxCtx = fxCanvas.getContext('2d');
+let particles = [];
+let animFrame = null;
+
+function resizeFxCanvas() {
+  fxCanvas.width = $('map').clientWidth || 1240;
+  fxCanvas.height = $('map').clientHeight || 720;
+}
+
+function triggerGoalConfetti(x, y) {
+  resizeFxCanvas();
+  particles = [];
+  const colors = ['#38bdf8', '#22c55e', '#facc15', '#f43f5e', '#a855f7', '#ffffff'];
+  for (let i = 0; i < 70; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 6;
+    particles.push({
+      x: x,
+      y: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 1.5,
+      radius: 2 + Math.random() * 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: 0.015 + Math.random() * 0.015
+    });
+  }
+  if (animFrame) cancelAnimationFrame(animFrame);
+  function renderFx() {
+    fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.08;
+      p.alpha -= p.decay;
+      if (p.alpha > 0) {
+        fxCtx.save();
+        fxCtx.globalAlpha = p.alpha;
+        fxCtx.fillStyle = p.color;
+        fxCtx.beginPath();
+        fxCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        fxCtx.fill();
+        fxCtx.restore();
+      }
+    });
+    particles = particles.filter(p => p.alpha > 0);
+    if (particles.length > 0) {
+      animFrame = requestAnimationFrame(renderFx);
+    } else {
+      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+    }
+  }
+  renderFx();
+}
+
+// ==========================================
+// PILAR 2: CSV EXPORT ENGINE
+// ==========================================
+function exportTraceCsv() {
+  soundClick();
+  const rows = $('trace').querySelectorAll('tr');
+  if (!rows.length) {
+    alert('Tabel trace masih kosong. Jalankan Step terlebih dahulu!');
+    return;
+  }
+  let csv = 'No,State_Path,Edge,g(n),h(n),Kalkulasi_f,Open_List,Closed_List,Keputusan\n';
+  rows.forEach(tr => {
+    const cols = Array.from(tr.querySelectorAll('td')).map(td => {
+      let t = td.innerText.replace(/"/g, '""').trim();
+      return `"${t}"`;
+    });
+    csv += cols.join(',') + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Trace_AStar_Sim_Fish_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  log('📥 File CSV tabel penelusuran A* berhasil diunduh!');
+}
+
+// ==========================================
+// PILAR 2: SPOTLIGHT PRESENTATION MODE
+// ==========================================
+let isSpotlight = false;
+function toggleSpotlight() {
+  soundClick();
+  isSpotlight = !isSpotlight;
+  document.body.classList.toggle('spotlight', isSpotlight);
+  $('btnSpotlight').textContent = isSpotlight ? '✕ Keluar Presentasi' : '📽️ Presentasi';
+  $('btnSpotlight').style.background = isSpotlight ? '#b91c2a' : '#0d1a2d';
+  resizeMap();
+  resizeFxCanvas();
+  log(isSpotlight ? '📽️ Mode Presentasi Aktif. Layar difokuskan ke kanvas peta.' : '📽️ Mode Presentasi Dimatikan.');
+}
+
+build();
 </script></body></html>

@@ -188,6 +188,14 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 @media (max-width: 900px){body{overflow:auto}.navbar{height:auto;min-height:64px;padding:12px;align-items:flex-start;gap:10px;flex-wrap:wrap}.brand{font-size:14px}.badge{font-size:9px;padding:4px 8px}.tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.tab-btn{min-height:44px;white-space:nowrap;font-size:11px;padding:8px 12px}.main-wrapper{height:auto;display:block}.sidebar{width:100%;max-height:none;border-right:0;border-bottom:1px solid var(--border-light)}.workspace{min-height:760px;padding:10px}.view-container{position:relative;min-height:740px}.legend{position:fixed;right:8px;bottom:8px;padding:9px;font-size:10px;gap:6px}.tsp-map{width:900px;height:620px}.grid-canvas{transform-origin:top left}.info-panel{position:relative;inset:auto;margin:12px}.modal{width:min(360px,calc(100vw - 24px))}.btn{min-height:44px}}
 @media (max-width:520px){.brand{width:100%;font-size:12px}.brand svg{width:20px;height:20px}.section{padding:16px}.stats-grid{grid-template-columns:1fr 1fr}.log-box{min-height:180px}.workspace{min-height:620px}.view-container{min-height:610px}.grid-wrapper{width:100%;padding:8px;overflow:auto;align-items:flex-start}.grid-toolbar{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;border-radius:8px;padding:8px}.grid-canvas{transform:none}.cell{width:clamp(16px,4.3vw,23px);height:clamp(16px,4.3vw,23px);font-size:8px}.tsp-map{width:100%;height:520px;min-height:520px}.legend{display:none}.tsp-point .tsp-label{font-size:9px;max-width:90px;overflow:hidden;text-overflow:ellipsis}.tabs .tab-btn{flex:0 0 auto}.navbar{overflow:hidden}.modal-overlay{padding:12px}.modal{width:min(360px,100%)}}
+
+/* Spotlight Presentation Mode & Floating HUD */
+.spotlight .sidebar { display: none !important; }
+.spotlight .workspace { padding: 10px !important; }
+.spotlight-hud { display: none; position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(15,23,42,0.92); border: 2px solid #38bdf8; border-radius: 12px; padding: 10px 18px; gap: 10px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); align-items: center; }
+.spotlight .spotlight-hud { display: flex !important; }
+.spotlight-hud .btn { padding: 10px 16px; font-size: 12px; }
+
 </style>
 </head>
 <body>
@@ -201,6 +209,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <button class="tab-btn active" onclick="switchTab('tree')">🌳 Lab Pohon (Custom)</button>
     <button class="tab-btn" onclick="switchTab('grid')">🏙️ Logistik Grid (Medan Berat)</button>
     <button class="tab-btn" onclick="switchTab('tsp')">🚚 TSP (Pengiriman Realistis)</button>
+    <button class="tab-btn" id="btnIndexSpotlight" onclick="toggleIndexSpotlight()" style="background:#0f172a;border-color:#38bdf8;">📽️ Mode Presentasi</button>
     <a href="fish_astar.html" target="_blank" class="tab-btn" style="text-decoration:none; background:linear-gradient(135deg, #16a34a, #15803d); color:white; border:1px solid #4ade80;">🐟 Sim_Fish_Shoes (Game Mode) ↗</a>
   </div>
 </div>
@@ -295,6 +304,10 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     </div>
 
     <!-- Logs -->
+    <div class="section-title" style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+      <span>Riwayat Log</span>
+      <button class="btn-sm" style="padding:4px 8px;font-size:10.5px;background:#1e3a8a;border-color:#3b82f6;" onclick="exportIndexLogsCsv()">📥 Unduh CSV</button>
+    </div>
     <div class="log-box" id="logBox">
       <div class="log-item"><span class="log-icon">🚀</span> <span>Sistem UI/UX tingkat lanjut diinisialisasi. Siap untuk simulasi.</span></div>
     </div>
@@ -348,6 +361,13 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
         <div id="tspPointsContainer"></div>
         <div id="tspTruck" class="tsp-truck">🚚</div>
       </div>
+    </div>
+
+    <div class="spotlight-hud" id="spotlightHud">
+      <button class="btn btn-play" onclick="togglePlay()">▶ Play</button>
+      <button class="btn btn-step" onclick="stepSim()">⏭ Step</button>
+      <button class="btn btn-reset" onclick="resetSim()">↻ Reset</button>
+      <button class="btn" style="background:#475569;" onclick="toggleIndexSpotlight()">✕ Tutup</button>
     </div>
 
     <!-- Legend Global -->
@@ -1301,6 +1321,44 @@ function saveModalEdit() {
     if (activeEditTarget.u === treeGoal && val !== 0) addLog(`⚠️ Admissibility Alert: Target Goal dianjurkan h=0!`, '🚨');
   }
   closeModal(); resetSim();
+}
+
+
+// ==========================================
+// PILAR 2: CSV EXPORT & SPOTLIGHT MODE
+// ==========================================
+function exportIndexLogsCsv() {
+  const items = document.querySelectorAll('#logBox .log-item');
+  if (!items.length) {
+    alert('Log eksekusi masih kosong!');
+    return;
+  }
+  let csv = 'No,Aktivitas_Log\n';
+  items.forEach((item, idx) => {
+    let text = item.innerText.replace(/"/g, '""').trim();
+    csv += `${idx + 1},"${text}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Log_AStar_${activeMode.toUpperCase()}_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  addLog('📥 File CSV riwayat log eksekusi A* berhasil diunduh!', '💾');
+}
+
+let isIndexSpotlight = false;
+function toggleIndexSpotlight() {
+  isIndexSpotlight = !isIndexSpotlight;
+  document.body.classList.toggle('spotlight', isIndexSpotlight);
+  const btn = document.getElementById('btnIndexSpotlight');
+  if (btn) {
+    btn.textContent = isIndexSpotlight ? '✕ Tutup Presentasi' : '📽️ Mode Presentasi';
+    btn.style.background = isIndexSpotlight ? '#b91c2a' : '#0f172a';
+  }
 }
 
 // Initial Boot
