@@ -344,7 +344,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <div class="view-container" id="viewTsp">
       <div class="tsp-map" id="tspMap">
         <div class="tsp-grid-bg"></div>
-        <svg class="canvas-svg tsp-svg" id="tspSvg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <svg class="canvas-svg tsp-svg" id="tspSvg" viewBox="0 0 1000 650"></svg>
         <div id="tspPointsContainer"></div>
         <div id="tspTruck" class="tsp-truck">🚚</div>
       </div>
@@ -1080,17 +1080,18 @@ function drawTspNetwork() {
     const n1 = getTspNode(road.u);
     const n2 = getTspNode(road.v);
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', n1.x); line.setAttribute('y1', n1.y);
-    line.setAttribute('x2', n2.x); line.setAttribute('y2', n2.y);
+    line.setAttribute('x1', n1.x * 10); line.setAttribute('y1', n1.y * 6.5);
+    line.setAttribute('x2', n2.x * 10); line.setAttribute('y2', n2.y * 6.5);
     line.setAttribute('class', 'tsp-road-line');
     tspSvg.appendChild(line);
     const badge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     badge.style.cursor = 'pointer';
-    badge.setAttribute('transform', `translate(${(n1.x + n2.x) / 2}, ${(n1.y + n2.y) / 2})`);
+    badge.setAttribute('transform', `translate(${(n1.x + n2.x) * 5}, ${(n1.y + n2.y) * 3.25})`);
     badge.onclick = () => openTspRoadModal(road);
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', -22); rect.setAttribute('y', -11); rect.setAttribute('width', 44); rect.setAttribute('height', 22);
-    rect.setAttribute('rx', 5); rect.setAttribute('fill', '#0f172a'); rect.setAttribute('stroke', '#38bdf8');
+    rect.setAttribute('x', -24); rect.setAttribute('y', -11); rect.setAttribute('width', 48); rect.setAttribute('height', 22);
+    rect.setAttribute('rx', 6); rect.setAttribute('fill', '#0f172a'); rect.setAttribute('stroke', '#38bdf8');
+    rect.setAttribute('stroke-width', '1.5');
     badge.appendChild(rect);
     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     label.setAttribute('class', 'tsp-road-label'); label.setAttribute('y', 1);
@@ -1182,7 +1183,7 @@ function updateTspSvgPath(pathArr, isFinal=false) {
   if (!roadPath.length) return;
   const d = roadPath.map((id, i) => {
     const node = getTspNode(id);
-    return `${i ? 'L' : 'M'} ${node.x} ${node.y}`;
+    return `${i ? 'L' : 'M'} ${node.x * 10} ${node.y * 6.5}`;
   }).join(' ');
   const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   pathEl.setAttribute('d', d);
