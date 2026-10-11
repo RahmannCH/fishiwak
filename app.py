@@ -4,16 +4,31 @@ def manhattan(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 def a_star(grid_size, start, goal, obstacles):
-    # ponytail: grid 4-arah seragam cost 1. Upgrade ke bobot jalan jika butuh simulasi macet dinamis.
+    # Contoh grid seragam 4-arah dengan cost langkah 1.
+    # Varian medan berbobot (aspal/lumpur/sungai) diimplementasikan di index.html modul Grid.
+    if start == goal:
+        return [start]
+    for pt, nama in ((start, "Start"), (goal, "Goal")):
+        if not (0 <= pt[0] < grid_size and 0 <= pt[1] < grid_size):
+            print(f"{nama} {pt} di luar grid.")
+            return []
+    if start in obstacles or goal in obstacles:
+        print("Start/Goal tidak boleh berada di atas rintangan.")
+        return []
+
     open_set = []
-    heapq.heappush(open_set, (0, start))
-    
+    counter = 0
+    heapq.heappush(open_set, (manhattan(start, goal), 0, counter, start))
+
     came_from = {}
     g_score = {start: 0}
-    f_score = {start: manhattan(start, goal)}
+    closed = set()
 
     while open_set:
-        _, current = heapq.heappop(open_set)
+        _, _, _, current = heapq.heappop(open_set)
+        if current in closed:
+            continue
+        closed.add(current)
 
         if current == goal:
             path = []
@@ -30,13 +45,14 @@ def a_star(grid_size, start, goal, obstacles):
             nx, ny = nxt
             if 0 <= nx < grid_size and 0 <= ny < grid_size and nxt not in obstacles:
                 tentative_g = g_score[current] + 1
-                
+
                 if tentative_g < g_score.get(nxt, float('inf')):
                     came_from[nxt] = current
                     g_score[nxt] = tentative_g
-                    f_score[nxt] = tentative_g + manhattan(nxt, goal)
-                    heapq.heappush(open_set, (f_score[nxt], nxt))
-                    
+                    f = tentative_g + manhattan(nxt, goal)
+                    counter += 1
+                    heapq.heappush(open_set, (f, -tentative_g, counter, nxt))
+
     return []
 
 def cetak_grid(grid_size, start, goal, obstacles, path):
@@ -70,14 +86,16 @@ if __name__ == "__main__":
     }
 
     rute = a_star(ukuran, gudang, tujuan, rintangan)
-    
-    assert len(rute) > 0, "Rute harus ditemukan"
-    assert rute[0] == gudang and rute[-1] == tujuan, "Rute harus valid dari start ke goal"
 
-    print("=== SIMULASI SISTEM PENGIRIMAN BARANG (A* SEARCH) ===")
-    print(f"Kelompok : 1")
-    print(f"Gudang   : {gudang}")
-    print(f"Tujuan   : {tujuan}")
-    print(f"Rute     : {rute}")
-    print(f"Langkah  : {len(rute) - 1}")
-    cetak_grid(ukuran, gudang, tujuan, rintangan, rute)
+    if not rute:
+        print("Tidak ada rute dari gudang ke tujuan (jalur tertutup rintangan).")
+    elif rute[0] != gudang or rute[-1] != tujuan:
+        print("Rute tidak valid dari start ke goal.")
+    else:
+        print("=== SIMULASI SISTEM PENGIRIMAN BARANG (A* SEARCH) ===")
+        print(f"Kelompok : 1")
+        print(f"Gudang   : {gudang}")
+        print(f"Tujuan   : {tujuan}")
+        print(f"Rute     : {rute}")
+        print(f"Langkah  : {len(rute) - 1}")
+        cetak_grid(ukuran, gudang, tujuan, rintangan, rute)

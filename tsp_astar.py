@@ -125,7 +125,8 @@ def a_star_tsp(start=0):
             continue
 
         # Ekspansi tetangga (pilih lokasi berikutnya yang belum dikunjungi)
-        for nxt in unvisited:
+        # sorted() agar urutan deterministik saat f sama (mudah direproduksi untuk laporan)
+        for nxt in sorted(unvisited):
             step_cost = MATRIKS_JARAK[curr][nxt]
             tentative_g = g + step_cost
             next_unvisited = unvisited - {nxt}

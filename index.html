@@ -181,13 +181,17 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
 .btn-sm { padding: 8px 14px; font-size: 11.5px; border-radius: 6px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30, 41, 59, 0.6); color: #e2e8f0; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 .btn-sm:hover { background: rgba(51, 65, 85, 0.8); color: white; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
+/* Keyboard focus indicator */
+:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+select:focus-visible, input:focus-visible, button:focus-visible, a:focus-visible, .modal-input:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+
 /* Custom Scrollbar for global */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 @media (max-width: 900px){body{overflow:auto}.navbar{height:auto;min-height:64px;padding:12px;align-items:flex-start;gap:10px;flex-wrap:wrap}.brand{font-size:14px}.badge{font-size:9px;padding:4px 8px}.tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.tab-btn{min-height:44px;white-space:nowrap;font-size:11px;padding:8px 12px}.main-wrapper{height:auto;display:block}.sidebar{width:100%;max-height:none;border-right:0;border-bottom:1px solid var(--border-light)}.workspace{min-height:760px;padding:10px}.view-container{position:relative;min-height:740px}.legend{position:fixed;right:8px;bottom:8px;padding:9px;font-size:10px;gap:6px}.tsp-map{width:900px;height:620px}.grid-canvas{transform-origin:top left}.info-panel{position:relative;inset:auto;margin:12px}.modal{width:min(360px,calc(100vw - 24px))}.btn{min-height:44px}}
-@media (max-width:520px){.brand{width:100%;font-size:12px}.brand svg{width:20px;height:20px}.section{padding:16px}.stats-grid{grid-template-columns:1fr 1fr}.log-box{min-height:180px}.workspace{min-height:620px}.view-container{min-height:610px}.grid-wrapper{width:100%;padding:8px;overflow:auto;align-items:flex-start}.grid-toolbar{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;border-radius:8px;padding:8px}.grid-canvas{transform:none}.cell{width:clamp(16px,4.3vw,23px);height:clamp(16px,4.3vw,23px);font-size:8px}.tsp-map{width:100%;height:520px;min-height:520px}.legend{display:none}.tsp-point .tsp-label{font-size:9px;max-width:90px;overflow:hidden;text-overflow:ellipsis}.tabs .tab-btn{flex:0 0 auto}.navbar{overflow:hidden}.modal-overlay{padding:12px}.modal{width:min(360px,100%)}}
+@media (max-width:520px){.brand{width:100%;font-size:12px}.brand svg{width:20px;height:20px}.section{padding:16px}.stats-grid{grid-template-columns:1fr 1fr}.log-box{min-height:180px}.workspace{min-height:620px}.view-container{min-height:610px}.grid-wrapper{width:100%;padding:8px;overflow:auto;align-items:flex-start}.grid-toolbar{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;border-radius:8px;padding:8px}.grid-canvas{transform:none}.cell{width:clamp(24px,6vw,32px);height:clamp(24px,6vw,32px);font-size:8px}.tsp-map{width:100%;height:520px;min-height:520px}.legend{display:none}.tsp-point .tsp-label{font-size:9px;max-width:90px;overflow:hidden;text-overflow:ellipsis}.tabs .tab-btn{flex:0 0 auto}.navbar{overflow:hidden}.modal-overlay{padding:12px}.modal{width:min(360px,100%)}}
 
 /* Spotlight Presentation Mode & Floating HUD */
 .spotlight .sidebar { display: none !important; }
@@ -222,7 +226,7 @@ select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,
     <div class="section">
       <div class="section-title">Konfigurasi AI Engine</div>
       <select id="algoSelect" disabled aria-label="Algoritma aktif">
-        <option value="astar">A* Search (f = g + h) — Termurah / Optimal</option>
+        <option value="astar">A* Search (f = g + h): Termurah / Optimal</option>
       </select>
       <div style="font-size:11.5px; color:#94a3b8; line-height:1.5;">Simulasi ini fokus 100% pada A*. Open List selalu memilih state dengan nilai <code>f(n)</code> terendah.</div>
       
@@ -432,8 +436,8 @@ class PriorityQueue {
  * ========================================================================== */
 
 const DEFAULT_TREE_NODES = {
-  A: { x: 475, y: 70,  h: 6 },
-  B: { x: 260, y: 170, h: 5 },
+  A: { x: 475, y: 70,  h: 5 },
+  B: { x: 260, y: 170, h: 3 },
   C: { x: 475, y: 170, h: 1 },
   D: { x: 690, y: 170, h: 4 },
   E: { x: 190, y: 290, h: 2 },
@@ -503,6 +507,23 @@ let cameFrom = {};
 let gScore = {};
 let fScore = {};
 let optimalPath = [];
+let traceRows = [];
+
+function fmtOpenList() {
+  const rows = frontier.toArray().map(i => {
+    const lbl = (activeMode === 'tsp' || activeMode === 'grid') ? (i.stateKey ?? i.id ?? `(${i.r},${i.c})`) : i.id;
+    return `${lbl}(f=${Number(i.f).toFixed(1)})`;
+  });
+  return rows.length ? rows.join(' | ') : '-';
+}
+function pushTraceRow(state, edge, g, h, f, decision) {
+  traceRows.push({
+    no: traceRows.length + 1, mode: activeMode.toUpperCase(),
+    state: String(state), edge: edge || '-',
+    g: Number(g).toFixed(1), h: Number(h).toFixed(1), f: Number(f).toFixed(1),
+    open: fmtOpenList(), closed: [...visited].join(', ') || '-', decision
+  });
+}
 
 // DOM Reference
 const algoSelect = document.getElementById('algoSelect');
@@ -554,7 +575,8 @@ function init() {
   goalSel.onchange = (e) => { 
     treeGoal = e.target.value; 
     TREE_NODES[treeGoal].h = 0; 
-    resetSim(); 
+    resetSim();
+    addLog(`Target Goal dipindah ke <b>${treeGoal}</b> (h=0). Nilai h node lain masih terkalibrasi untuk goal sebelumnya, sesuaikan manual bila perlu agar h tidak melebihi jarak nyata.`, '');
   };
   
   document.getElementById('heuristicGrid').onchange = () => resetSim();
@@ -627,6 +649,7 @@ function resetSim() {
   gScore = {};
   fScore = {};
   optimalPath = [];
+  traceRows = [];
 
   statVisited.textContent = '0';
   statCost.textContent = '0';
@@ -661,37 +684,43 @@ function togglePlay() {
 }
 
 function stepSim() {
-  if (isFinished) return;
-  if (frontier.isEmpty()) {
-    isFinished = true;
-    addLog(`<span class="log-warn">Jalan Buntu! Open List kosong sebelum target tercapai.</span>`, '❌');
-    endSim();
+  while (true) {
+    if (isFinished) return;
+    if (frontier.isEmpty()) {
+      isFinished = true;
+      addLog(`<span class="log-warn">Jalan Buntu! Open List kosong sebelum target tercapai.</span>`, '❌');
+      endSim();
+      return;
+    }
+
+    const current = frontier.shift();
+    const cid = (activeMode === 'tsp' || activeMode === 'grid') ? current.stateKey || current.id : current.id;
+
+    // Re-Opening Closed Nodes Logic (Anti-Inconsistent Heuristic Fix)
+    // Entri basi (stale) dilewati dengan loop, bukan rekursi.
+    if (visited.has(cid)) {
+      if (current.g > gScore[cid]) {
+        continue;
+      } else if (current.g < gScore[cid]) {
+        visited.delete(cid); // Re-open
+        addLog(`<span class="log-warn">⚠️ Rute lebih murah ditemukan ke simpul tertutup. Re-Opening Node!</span>`, '🔓');
+      } else {
+        continue;
+      }
+    }
+
+    visited.add(cid);
+    statVisited.textContent = visited.size;
+
+    updateMath(activeMode === 'tsp' ? `Kurir @${tspNodes.find(n=>n.id===current.id).name}` : (activeMode === 'grid' ? `Petak (${current.r},${current.c})` : `Simpul ${current.id}`), current.g, current.h, current.f);
+
+    if (activeMode === 'tree') processTreeStep(current, TREE_NODES, TREE_EDGES, treeGoal);
+    else if (activeMode === 'tsp') processTspStep(current);
+    else if (activeMode === 'grid') processGridStep(current);
+
+    updateQueueUI();
     return;
   }
-
-  const current = frontier.shift();
-  const cid = (activeMode === 'tsp' || activeMode === 'grid') ? current.stateKey || current.id : current.id;
-  
-  // Re-Opening Closed Nodes Logic (Anti-Inconsistent Heuristic Fix)
-  if (visited.has(cid)) {
-      if (current.g > gScore[cid]) {
-          return stepSim(); 
-      } else if (current.g < gScore[cid]) {
-          visited.delete(cid); // Re-open
-          addLog(`<span class="log-warn">⚠️ Rute lebih murah ditemukan ke simpul tertutup. Re-Opening Node!</span>`, '🔓');
-      }
-  }
-
-  visited.add(cid);
-  statVisited.textContent = visited.size;
-
-  updateMath(activeMode === 'tsp' ? `Kurir @${tspNodes.find(n=>n.id===current.id).name}` : (activeMode === 'grid' ? `Petak (${current.r},${current.c})` : `Simpul ${current.id}`), current.g, current.h, current.f);
-
-  if (activeMode === 'tree') processTreeStep(current, TREE_NODES, TREE_EDGES, treeGoal);
-  else if (activeMode === 'tsp') processTspStep(current);
-  else if (activeMode === 'grid') processGridStep(current);
-  
-  updateQueueUI();
 }
 
 function endSim() {
@@ -708,7 +737,7 @@ function updateQueueUI() {
   if (items.length === 0) { queueBox.innerHTML = '[ Kosong ]'; return; }
   
   let str = items.map(i => {
-    let lbl = (activeMode === 'tsp' || activeMode === 'grid') ? (i.id || `(${i.r},${i.c})`) : i.id;
+    let lbl = (activeMode === 'tsp' || activeMode === 'grid') ? (i.id ?? `(${i.r},${i.c})`) : i.id;
     return `<b>${lbl}</b>(<span style="color:#f8fafc;">${i.f.toFixed(1)}</span>)`;
   }).join(' <span style="color:#475569;">|</span> ');
   queueBox.innerHTML = `[ ${str} ]`;
@@ -822,10 +851,10 @@ function initGridSearch() {
 function updateGridUI(cid, status) {
   const el = document.getElementById(`c-${cid.replace(',','-')}`);
   if (!el) return;
-  if (status === 'current') { el.classList.remove('frontier'); el.classList.add('current'); }
-  else if (status === 'visited') { el.classList.remove('current'); el.classList.add('visited'); }
-  else if (status === 'frontier') { el.classList.add('frontier'); }
-  else if (status === 'path') { el.classList.remove('visited', 'current'); el.classList.add('path'); }
+  if (status === 'current') { el.classList.remove('frontier', 'visited'); el.classList.add('current'); }
+  else if (status === 'visited') { el.classList.remove('current', 'frontier'); el.classList.add('visited'); }
+  else if (status === 'frontier') { el.classList.remove('visited', 'current'); el.classList.add('frontier'); }
+  else if (status === 'path') { el.classList.remove('visited', 'current', 'frontier'); el.classList.add('path'); }
 }
 
 function processGridStep(current) {
@@ -833,9 +862,8 @@ function processGridStep(current) {
   
   if (r !== gridStart.r || c !== gridStart.c) updateGridUI(cid, 'visited');
   
-  if (visited.size % 10 === 1) {
-    addLog(`🔍 Ekspansi: Petak (${r},${c}) | g=${g}, h=${current.h.toFixed(1)}, f=${current.f.toFixed(1)}`, '🔎');
-  }
+  addLog(`🔍 Ekspansi: Petak (${r},${c}) | g=${g}, h=${current.h.toFixed(1)}, f=${current.f.toFixed(1)}`, '🔎');
+  pushTraceRow(`(${r},${c})`, '', g, current.h, current.f, 'Expand');
 
   if (r === gridGoal.r && c === gridGoal.c) {
     isFinished = true;
@@ -850,6 +878,7 @@ function processGridStep(current) {
     optimalPath.forEach(pid => { if (pid !== `${gridGoal.r},${gridGoal.c}`) updateGridUI(pid, 'path'); });
     
     addLog(`<span class="log-ok">🎯 GOAL TERCAPAI!</span> Total Biaya Perjalanan: <b>${g}</b> (${optimalPath.length} langkah).`, '🏁');
+    pushTraceRow(`(${r},${c})`, '', g, current.h, current.f, 'Goal dipilih');
     addLog(`<span class="log-ok">💡 A* mengevaluasi biaya aktual dan heuristik, lalu memilih rute dengan total biaya terendah.</span>`, '📈');
     endSim();
     return;
@@ -878,8 +907,16 @@ function processGridStep(current) {
       if (!frontier.contains(nid) && !visited.has(nid)) {
         frontier.push(nodeObj);
         updateGridUI(nid, 'frontier');
+        pushTraceRow(`(${nr},${nc})`, `(${r},${c})-(${nr},${nc})`, tentativeG, h, f, 'Masuk Open List');
       } else if (frontier.contains(nid)) {
         frontier.update(nodeObj);
+        pushTraceRow(`(${nr},${nc})`, `(${r},${c})-(${nr},${nc})`, tentativeG, h, f, 'Update Open List');
+      } else {
+        visited.delete(nid);
+        frontier.push(nodeObj);
+        updateGridUI(nid, 'frontier');
+        addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Re-open Closed Node: Petak (${nr},${nc}) (f=${f.toFixed(1)})`, '🔓');
+        pushTraceRow(`(${nr},${nc})`, `(${r},${c})-(${nr},${nc})`, tentativeG, h, f, 'Re-open Closed Node');
       }
     }
   }
@@ -955,6 +992,32 @@ function initTreeSearch() {
   updateQueueUI();
 
   addLog(`✅ Lingkungan Lab Pohon Siap. Target Goal: <b>${treeGoal}</b>. Algoritma: <b>${algo.toUpperCase()}</b>`, '🌳');
+  checkTreeAdmissible();
+}
+
+let treeAdmissible = true;
+function trueTreeDistToGoal() {
+  const dist = {}; dist[treeGoal] = 0;
+  const pq = [{ id: treeGoal, d: 0 }];
+  while (pq.length) {
+    pq.sort((a, b) => a.d - b.d);
+    const c = pq.shift();
+    if (c.d !== dist[c.id]) continue;
+    for (const e of TREE_EDGES) {
+      const nb = e.u === c.id ? e.v : (e.v === c.id ? e.u : null);
+      if (!nb) continue;
+      const nd = c.d + e.w;
+      if (dist[nb] === undefined || nd < dist[nb]) { dist[nb] = nd; pq.push({ id: nb, d: nd }); }
+    }
+  }
+  return dist;
+}
+function checkTreeAdmissible() {
+  const truth = trueTreeDistToGoal();
+  const bad = Object.keys(TREE_NODES).filter(id => id !== treeGoal && TREE_NODES[id].h > (truth[id] === undefined ? Infinity : truth[id]));
+  treeAdmissible = bad.length === 0;
+  if (bad.length) addLog(`<span class="log-warn">Admissibility Alert: h melebihi jarak nyata di ${bad.slice(0, 5).join(', ')}. Rute tidak dijamin optimal sampai h diperbaiki.</span>`, '');
+  return treeAdmissible;
 }
 
 function updateGraphUI(mode, activeId, nodes, isInit=false) {
@@ -989,11 +1052,11 @@ function processTreeStep(current, nodes, edges, goalId) {
   const cid = current.id;
   
   addLog(`🔍 Ekspansi Simpul <span class="log-hl">${cid}</span> (g=${current.g}, h=${current.h}, f=<b>${current.f}</b>)`, '🔎');
+  pushTraceRow(cid, '', current.g, current.h, current.f, 'Expand');
 
   if (cid === goalId) {
     isFinished = true;
     statCost.textContent = current.g;
-    statCost.classList.add('optimal');
     
     let curr = cid;
     while(curr) { optimalPath.push(curr); curr = cameFrom[curr]; }
@@ -1005,7 +1068,13 @@ function processTreeStep(current, nodes, edges, goalId) {
     }
     
     updateGraphUI(mode, null, nodes);
-    addLog(`<span class="log-ok">🎯 GOAL TERCAPAI!</span> Rute Akhir: ${optimalPath.join(' &rarr; ')} | Cost g = <b>${current.g}</b>`, '🏁');
+    if (treeAdmissible) {
+      statCost.classList.add('optimal');
+      addLog(`<span class="log-ok">🎯 GOAL TERCAPAI!</span> Rute Akhir: ${optimalPath.join(' &rarr; ')} | Cost g = <b>${current.g}</b> (optimal, h admissible)`, '🏁');
+    } else {
+      addLog(`<span class="log-warn">🎯 GOAL TERCAPAI, tetapi h overestimate sehingga rute TIDAK dijamin optimal.</span> Rute: ${optimalPath.join(' &rarr; ')} | Cost g = <b>${current.g}</b>`, '🏁');
+    }
+    pushTraceRow(cid, '', current.g, current.h, current.f, 'Goal dipilih');
     endSim();
     return;
   }
@@ -1030,13 +1099,16 @@ function processTreeStep(current, nodes, edges, goalId) {
       if (frontier.contains(nid)) {
         frontier.update(nodeObj);
         addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Update Cost Rute Baru: <b>${nid}</b> (f=${f})`, '🔄');
+        pushTraceRow(nid, `${cid}-${nid} (${c.w})`, tentativeG, h, f, 'Update Open List');
       } else if (visited.has(nid)) {
         visited.delete(nid);
         frontier.push(nodeObj);
         addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Re-open Closed Node: <b>${nid}</b> (f=${f})`, '🔓');
+        pushTraceRow(nid, `${cid}-${nid} (${c.w})`, tentativeG, h, f, 'Re-open Closed Node');
       } else {
         frontier.push(nodeObj);
         addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Masuk Antrean: <b>${nid}</b> (f=${f})`, '📥');
+        pushTraceRow(nid, `${cid}-${nid} (${c.w})`, tentativeG, h, f, 'Masuk Open List');
       }
     }
   });
@@ -1134,6 +1206,7 @@ function resetTspRoadCosts() {
 }
 function openTspRoadModal(road) {
   if (isRunning || isFinished) return;
+  rememberModalOpener();
   activeEditTarget = { type: 'tsp-road', road };
   modalTitle.textContent = `Ubah Cost Jalan (${getTspNode(road.u).name} ↔ ${getTspNode(road.v).name})`;
   modalInput.value = road.cost;
@@ -1238,6 +1311,7 @@ function processTspStep(current) {
   
   updateTspSvgPath(path);
   addLog(`🚚 Kurir singgah di <b>${tspNodes.find(n=>n.id===cid).name}</b>. Paket sisa: ${unv.length}.`, '🛣️');
+  pushTraceRow(tspNodes.find(n=>n.id===cid).name, '', current.g, current.h, current.f, 'Expand');
 
   // Goal Condition
   if (unv.length === 0 && cid === 0 && path.length === tspNodes.length + 1) {
@@ -1248,6 +1322,7 @@ function processTspStep(current) {
     animateTruck(path);
     
     addLog(`<span class="log-ok">🎯 TUR PENGIRIMAN SELESAI!</span> Total Jarak Aktual = <b>${current.g.toFixed(1)} km</b>`, '🏆');
+    pushTraceRow('Gudang (pulang)', '', current.g, 0, current.g, 'Goal dipilih');
     
     addLog(`<span class="log-ok">💡 A* selesai:</span> Semua toko telah dikunjungi dan kurir kembali ke gudang melalui jaringan jalan yang tersedia.`, '⛽');
     endSim(); return;
@@ -1258,10 +1333,14 @@ function processTspStep(current) {
     const tentativeG = current.g + stepDist;
     const f = tentativeG;
     const returnState = { id: 0, path: [...path, 0], unvisited: [], g: tentativeG, h: 0, f, stateKey: '0-' };
-    gScore[returnState.stateKey] = tentativeG;
-    const queued = frontier.toArray().find(state => state.stateKey === returnState.stateKey);
-    if (queued) Object.assign(queued, returnState);
-    else frontier.push(returnState);
+    if (!gScore.hasOwnProperty(returnState.stateKey) || tentativeG < gScore[returnState.stateKey]) {
+      gScore[returnState.stateKey] = tentativeG;
+      const queued = frontier.toArray().find(state => state.stateKey === returnState.stateKey);
+      if (queued) Object.assign(queued, returnState);
+      else frontier.push(returnState);
+      frontier.items.sort((a, b) => a.f - b.f || b.g - a.g);
+      pushTraceRow('Gudang (pulang)', `${tspNodes.find(n=>n.id===cid).name}-Gudang (${stepDist.toFixed(1)})`, tentativeG, 0, f, 'Kembali ke depot');
+    }
     return;
   }
 
@@ -1283,6 +1362,7 @@ function processTspStep(current) {
       else frontier.push(state);
       frontier.items.sort((a, b) => a.f - b.f || b.g - a.g);
       addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Penilaian rute jalan ke <b>${tspNodes.find(n=>n.id===nextId).name}</b> (g=${tentativeG.toFixed(1)}, h=${h.toFixed(1)}, f=${f.toFixed(1)})`, '📋');
+      pushTraceRow(tspNodes.find(n=>n.id===nextId).name, `${tspNodes.find(n=>n.id===cid).name}-${tspNodes.find(n=>n.id===nextId).name} (${stepDist.toFixed(1)})`, tentativeG, h, f, 'Masuk Open List');
     }
   });
 }
@@ -1292,6 +1372,7 @@ function processTspStep(current) {
  * ========================================================================== */
 function openEditModal(type, u, v, val) {
   if (isRunning) return;
+  rememberModalOpener();
   activeEditTarget = { type, u, v };
   if (type === 'edge') modalTitle.innerHTML = `Ubah Bobot Jalan (${u} → ${v})`;
   else modalTitle.innerHTML = `Ubah Heuristik Node ${u}`;
@@ -1301,7 +1382,28 @@ function openEditModal(type, u, v, val) {
   modalInput.select();
 }
 
-function closeModal() { editModal.classList.remove('active'); activeEditTarget = null; }
+function closeModal() {
+  editModal.classList.remove('active');
+  activeEditTarget = null;
+  if (modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();
+  modalReturnFocus = null;
+}
+
+let modalReturnFocus = null;
+function rememberModalOpener() { modalReturnFocus = document.activeElement; }
+function trapModalTab(e) {
+  if (e.key !== 'Tab' || !editModal.classList.contains('active')) return;
+  const f = [...editModal.querySelectorAll('button,input,select')].filter(el => !el.disabled && el.getClientRects().length);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+document.addEventListener('keydown', (e) => {
+  if (!editModal.classList.contains('active')) return;
+  if (e.key === 'Escape') { closeModal(); return; }
+  trapModalTab(e);
+});
 
 function saveModalEdit() {
   if (!activeEditTarget) return;
@@ -1310,13 +1412,13 @@ function saveModalEdit() {
   
   if (activeEditTarget.type === 'edge') {
     const e = TREE_EDGES.find(x => (x.u === activeEditTarget.u && x.v === activeEditTarget.v) || (x.u === activeEditTarget.v && x.v === activeEditTarget.u));
-    if (e) { e.w = Math.max(1, val); addLog(`✍️ Bobot edge <b>(${e.u} ↔ ${e.v})</b> diubah jadi <b>${e.w}</b>.`, '✏️'); }
+    if (e) { e.w = Math.min(999, Math.max(1, val)); addLog(`✍️ Bobot edge <b>(${e.u} ↔ ${e.v})</b> diubah jadi <b>${e.w}</b>.`, '✏️'); }
   } else if (activeEditTarget.type === 'tsp-road') {
-    activeEditTarget.road.cost = Math.max(1, val);
+    activeEditTarget.road.cost = Math.min(999, Math.max(1, val));
     addLog(`✍️ Cost jalan TSP <b>${getTspNode(activeEditTarget.road.u).name} ↔ ${getTspNode(activeEditTarget.road.v).name}</b> diubah jadi <b>${activeEditTarget.road.cost} km</b>.`, '🛣️');
     drawTspNetwork();
   } else {
-    TREE_NODES[activeEditTarget.u].h = val;
+    TREE_NODES[activeEditTarget.u].h = Math.min(999, val);
     addLog(`✍️ Heuristik <b>Node ${activeEditTarget.u}</b> diubah jadi <b>h=${val}</b>.`, '✏️');
     if (activeEditTarget.u === treeGoal && val !== 0) addLog(`⚠️ Admissibility Alert: Target Goal dianjurkan h=0!`, '🚨');
   }
@@ -1328,18 +1430,26 @@ function saveModalEdit() {
 // PILAR 2: CSV EXPORT & SPOTLIGHT MODE
 // ==========================================
 function exportIndexLogsCsv() {
-  const items = document.querySelectorAll('#logBox .log-item');
-  if (!items.length) {
-    alert('Log eksekusi masih kosong!');
+  if (!traceRows.length) {
+    addLog(`<span class="log-warn">Tabel trace masih kosong. Jalankan Play atau Step terlebih dahulu, lalu unduh lagi.</span>`, '');
     return;
   }
-  
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const txt = `mso-number-format:'\\@';border:1px solid #cbd5e1;padding:6px;`;
+  const num = `border:1px solid #cbd5e1;padding:6px;text-align:right;`;
   let tableRows = '';
-  items.forEach((item, idx) => {
-    let text = item.innerText.trim();
+  traceRows.forEach((r) => {
     tableRows += `<tr>
-      <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${idx + 1}</td>
-      <td style="border:1px solid #cbd5e1; padding:6px;">${text}</td>
+      <td style="${num}">${r.no}</td>
+      <td style="${txt}">${esc(r.mode)}</td>
+      <td style="${txt}">${esc(r.state)}</td>
+      <td style="${txt}">${esc(r.edge)}</td>
+      <td style="${num}">${r.g}</td>
+      <td style="${num}">${r.h}</td>
+      <td style="${num}">${r.f}</td>
+      <td style="${txt}">${esc(r.open)}</td>
+      <td style="${txt}">${esc(r.closed)}</td>
+      <td style="${txt}">${esc(r.decision)}</td>
     </tr>\n`;
   });
   
@@ -1353,12 +1463,20 @@ function exportIndexLogsCsv() {
     </style>
     </head>
     <body>
-      <h2>Riwayat Log Eksekusi A* (${activeMode.toUpperCase()})</h2>
+      <h2>Tabel Runut Eksekusi A* (${activeMode.toUpperCase()})</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 50px;">No</th>
-            <th>Aktivitas Log</th>
+            <th style="width: 40px;">No</th>
+            <th>Mode</th>
+            <th>State</th>
+            <th>Edge</th>
+            <th>g(n)</th>
+            <th>h(n)</th>
+            <th>f(n)</th>
+            <th>Open List</th>
+            <th>Closed</th>
+            <th>Keputusan</th>
           </tr>
         </thead>
         <tbody>

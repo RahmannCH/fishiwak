@@ -1,10 +1,9 @@
 # LAPORAN TUGAS BESAR KECERDASAN BUATAN
-## Analisis Komparasi, Formulasi Matematis, dan Implementasi Aplikasi Web Simulasi Terpadu Algoritma A* Search pada 3 Lingkungan Pengujian
+## Formulasi Matematis dan Implementasi Aplikasi Web Simulasi Algoritma A* Search pada 3 Lingkungan Pengujian + Game Pathfinding
 
-**Kelompok:** 1  
-**Mata Kuliah:** Kecerdasan Buatan (Semester 3)  
-**Tenggat Waktu:** 2 Minggu (Presentasi Pekan ke-7)  
-**Berkas Program Utama:** `index.html` (Aplikasi Web Terpadu 3-Tab)  
+**Kelompok:** 1
+**Mata Kuliah:** Kecerdasan Buatan (Semester 3)
+**Berkas Program:** `index.html` (aplikasi web 3-tab), `fish_astar.html` (game pathfinding), `tsp_astar.py` + `app.py` (skrip pendukung Python)
 **Akses Repositori/Drive:** [Lampirkan Link Google Drive Akses Terbuka di Sini]
 
 ---
@@ -13,62 +12,91 @@
 Metode pencarian heuristik (*informed search*) adalah cabang fundamental kecerdasan buatan untuk menyelesaikan masalah optimasi rute dan penjelajahan ruang keadaan (*state space*). Berdasarkan instruksi tugas besar mata kuliah:
 > *"Berdasarkan kasus nyata atau simulasi kompleks, buat aplikasi yang cocok dengan metode pencarian: Best First Search, A*, Hill-Climbing, Simulated Annealing, Genetic Algorithm, dan CSP. Contoh: Simulasi sistem pengiriman barang (dari masalah TSP), silakan dikembangkan. Kelompok 1 berfokus pada A* Search."*
 
-Untuk menjawab tantangan tersebut secara menyeluruh, aplikasi dirancang memiliki 3 modul pengujian independen dalam satu antarmuka aplikasi web dinamis:
-1. **Modul 1 (Default): Lab Pohon Heuristik (Custom):** Pembuktian sifat konsistensi dan kemampuan manipulasi dinamis bobot lintasan (*edge*) serta heuristik secara *Click-to-Edit*, dilengkapi mekanisme penanganan otomatis *Re-Opening Closed Nodes*.
-2. **Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost):** Simulasi kurir menempuh rintangan spasial (Jalan Aspal = 1, Lumpur = 3, Sungai = 5, Tembok = $\infty$) dengan pembanding metrik *Manhattan* ($L_1$) dan *Euclidean* ($L_2$).
-3. **Modul 3: TSP Logistik (Pengiriman Realistis):** Simulasi tur kurir yang wajib mengunjungi semua toko lalu kembali ke gudang. Jaringan jalan tetap dengan cost tiap edge yang dapat diedit, dan heuristik MST dihitung menggunakan jarak terpendek pada jaringan jalan tersebut.
+Kelompok 1 memilih **A* Search saja** sebagai metode yang diimplementasikan; metode lain (Best First Search, Hill-Climbing, Simulated Annealing, Genetic Algorithm, CSP) berada di luar skop kelompok ini.
+
+Aplikasi dirancang memiliki modul pengujian independen:
+1. **Modul 1 (Default): Lab Pohon Heuristik (Custom):** graf pohon dengan bobot edge dan heuristik yang dapat diubah lewat *Click-to-Edit*, dilengkapi mekanisme *Re-Opening Closed Nodes* untuk heuristik inkonsisten.
+2. **Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost):** kurir menempuh rintangan spasial (Aspal = 1, Lumpur = 3, Sungai = 5, Tembok = tak terlewati) dengan metrik *Manhattan* dan *Euclidean*.
+3. **Modul 3: TSP Logistik (Pengiriman Realistis):** tur kurir yang wajib mengunjungi semua toko lalu kembali ke gudang melalui jaringan jalan; heuristik MST dihitung dari jarak jalan terpendek.
+4. **Modul 4 (Game): Sim Fish Shoes (`fish_astar.html`):** pathfinding ikan antar bangunan dengan tiga mode heuristik (Dijkstra eksak, Euclidean ilustratif, manual), *Step Back* per snapshot, dan ekspor tabel runut.
 
 ---
 
 ## 2. Landasan Teori Algoritma A*
 
-Algoritma A* memilih simpul berikutnya dalam antrean prioritas (*Priority Queue / Open List*) berdasarkan formula:
+A* memilih simpul berikutnya dari antrean prioritas (*Open List*) berdasarkan:
 $$f(n) = g(n) + h(n)$$
 
-1. **$g(n)$ (Actual Cost):** Akumulasi biaya nyata dari titik awal ($Start$) ke simpul saat ini ($n$).
-2. **$h(n)$ (Heuristic Cost):** Estimasi biaya terendah untuk mencapai kondisi Goal dari simpul $n$.
-3. **Syarat Admissibility:** Agar A* dijamin menghasilkan solusi optimal (terpendek mutlak), nilai $h(n)$ harus memenuhi $h(n) \le h^*(n)$ di mana $h^*(n)$ adalah jarak nyata minimum yang sesungguhnya.
+1. **$g(n)$ (Actual Cost):** akumulasi biaya nyata dari Start ke simpul $n$.
+2. **$h(n)$ (Heuristic Cost):** estimasi biaya termurah dari $n$ ke Goal.
+3. **Syarat Admissibility:** agar A* dijamin optimal, $h(n) \le h^*(n)$ untuk setiap $n$, dengan $h^*(n)$ jarak nyata minimum yang sesungguhnya.
+4. **Konsistensi (monotonik):** $h(n) \le c(n,n') + h(n')$ untuk tiap edge. Heuristik konsisten pasti admissible; heuristik admissible yang inkonsisten tetap optimal **asal** simpul tertutup dibuka kembali (*re-open*) ketika ditemukan rute $g$ yang lebih murah, dan goal dinyatakan tercapai saat Goal **dikeluarkan** dari Open List (bukan saat pertama dibangkitkan).
 
-- A* Search ($f = g + h$) memilih state dengan estimasi total terendah, memakai biaya aktual $g(n)$ dan estimasi sisa $h(n)$.
-- Heuristik otomatis aplikasi admissible. Mode manual tersedia untuk eksperimen; optimalitas hanya terjamin jika nilai $h(n)$ tidak melebih-lebihkan biaya minimum sebenarnya.
-- Jika rute lebih murah ditemukan ke node tertutup, node dibuka kembali dan dimasukkan ke Open List.
+Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ sama, $g$ terbesar didahulukan (cabang terdalam dulu).
+
+### Matriks admissibility per mode (sesuai implementasi)
+
+| Modul | Heuristik | Sifat | Jaminan optimal |
+|---|---|---|---|
+| Lab Pohon (goal K, default) | Manual terkalibrasi: $h(A)=5$, $h(B)=3$ (= jarak nyata) | Admissible | Ya |
+| Lab Pohon (edit manual) | Bebas, bisa overestimate | Bisa inadmissible; aplikasi memberi *Admissibility Alert* dan menahan klaim "optimal" | Hanya jika $h \le h^*$ |
+| Grid Manhattan/Euclidean | Jarak grid, biaya langkah minimum 1 | Konsisten, admissible | Ya |
+| TSP Web | MST di atas closure jarak jalan + akses masuk/keluar | Admissible | Ya |
+| TSP Python | MST di atas graf lengkap Euclidean | Admissible | Ya |
+| Fish mode Dijkstra | Jarak jalan nyata ke Goal ($h = h^*$) | Eksak, admissible | Ya |
+| Fish mode Euclidean | Jarak piksel/45, ilustratif | **Tidak dijamin** admissible; aplikasi memberi peringatan | Tidak dijamin |
+| Fish mode manual | Bebas | Bisa inadmissible; aplikasi memberi peringatan | Hanya jika $h \le h^*$ |
 
 ---
 
 ## 3. Analisis Eksekusi & Pemodelan Sistem
 
 ### A. Modul 1: Lab Pohon Heuristik (Tab Default)
-- Representasi graf pohon dengan kemampuan klik langsung untuk mengubah beban biaya (misal mengubah lintasan menjadi mahal) dan heuristik.
-- **Logika Re-Opening Closed Nodes:** Jika pengguna memasukkan heuristik manual yang inkonsisten sehingga algoritma menemukan rute baru yang *lebih murah* menuju simpul yang sudah telanjur dimasukkan ke dalam *Closed List*, algoritma tidak akan mengabaikannya. Simpul tersebut secara cerdas dibatalkan status *closed*-nya dan dimasukkan kembali ke antrean prioritas demi mempertahankan hukum optimalitas A*.
+- Default untuk goal K: satu-satunya koridor ke K adalah `A-B(2)-E(1)-K(2) = 5`, sehingga $h(A)=5$ dan $h(B)=3$ tepat sama dengan jarak nyata (admissible).
+- Nilai $h$ dapat diubah manual; bila pengguna membuat $h$ overestimate (misal $h(B)=9$), algoritma mendeteksi rute $g$ lebih murah ke simpul tertutup, membatalkan status *closed*-nya (*re-open*), dan aplikasi menampilkan peringatan admissibility serta tidak mengklaim rute "optimal".
+- Saat goal diganti, goal baru otomatis $h=0$; aplikasi mencatat bahwa $h$ node lain masih terkalibrasi untuk goal lama dan perlu disesuaikan manual.
 
 ### B. Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost)
-- **Matriks Biaya Langkah:** Aspal ($c = 1$), Lumpur ($c = 3$), Sungai ($c = 5$), Tembok ($c = \infty$).
-- Saat rintangan sungai menghalangi garis lurus antara kurir dan tujuan:
-  - *A* Search:* Menguji rute memutar melalui aspal. Karena biaya putaran ($1+1+1$) terakumulasi lebih rendah dibanding masuk sungai ($+5$), A* memilih rute dengan total biaya terendah.
+- **Matriks Biaya Langkah:** Aspal ($c = 1$), Lumpur ($c = 3$), Sungai ($c = 5$), Tembok (tak terlewati).
+- Manhattan dan Euclidean admissible karena biaya langkah minimum adalah 1; A* memilih rute biaya total terendah, bukan jarak geometris terdekat. Contoh skenario: sungai (+5) di tengah jalur membuat rute memutar via aspal ($1+1+1$) lebih murah.
+- Implementasi re-open diseragamkan dengan Tree; entri basi (*stale*) dilewati dengan loop.
 
-### C. Modul 3: Pengayaan TSP (Traveling Salesperson Problem) Multi-Drop
-- **Ruang Keadaan (State):** $\text{State}(n) = (\text{Lokasi\_Kurir\_Saat\_Ini}, \text{Daftar\_Pelanggan\_Yang\_Telah\_Dikunjungi})$.
-- **Heuristik MST Prim:**
-  $$h(n) = \min_{u \in U} \text{dist}(c, u) + \text{Bobot MST}(U) + \min_{u \in U} \text{dist}(u, \text{Gudang})$$
-- Visualisasi memakai jaringan jalan statis. Setiap jalan memiliki cost yang dapat diedit pengguna, sementara A* menghitung jarak perjalanan antar lokasi melalui rute jalan terpendek. Animasi truk mengikuti edge jalan nyata pada tur optimal.
+### C. Modul 3: TSP Logistik Multi-Drop
+- **Ruang Keadaan:** $\text{State} = (\text{lokasi kurir}, \text{himpunan belum dikunjungi})$.
+- **Heuristik MST:** $h = \min \text{dist}(c,U) + \text{MST}(U) + \min \text{dist}(U,\text{depot})$, dengan $\text{dist}$ = jarak jalan terpendek (Dijkstra di atas road-graph), bukan garis lurus.
+- State tur-lengkap yang kembali ke depot hanya diterima bila $g$-nya terbaik (penjagaan minimum), lalu antrean diurut ulang.
+- Animasi truk mengunjungi node jalan sepanjang tur optimal hingga kembali ke gudang.
+- **Perbedaan dengan `tsp_astar.py`:** skrip Python memakai graf lengkap Euclidean (6 titik Banjarmasin/Pelaihari, urutan ekspansi deterministik), sedangkan Web memakai closure road-graph; formulanya sama, domain jaraknya berbeda. Keduanya terdokumentasi agar tidak tertukar.
+
+### D. Modul 4: Game Sim Fish Shoes
+- Start permanen Kos Kan; graf acak berbiji (*seed* via `?seed=`, misal `fish_astar.html?seed=7`) dan goal = node terjauh dari Start agar demo dapat diulang.
+- Mode Dijkstra menghitung $h$ eksak; mode Euclidean dan manual diawasi pemeriksa admissibility yang membandingkan $h$ dengan jarak Dijkstra nyata.
+- *Step Back* mengembalikan snapshot pra-ekspansi (struktur Open/Closed, tabel, log, posisi ikan); entri basi dibuang tanpa mengotori riwayat.
+
+### E. Skrip Python pendukung
+- `app.py`: contoh grid **seragam** 4-arah (cost 1) dengan closed-set, tie-break $g$ terbesar, dan validasi ramah (buntu, start/goal di rintangan, start = goal). Varian medan berbobot hidup di `index.html`.
+- `tsp_astar.py`: A* TSP graf-lengkap Euclidean dengan heuristik MST admissible dan urutan ekspansi deterministik (12 ekspansi state pada dataset bawaan).
 
 ---
 
-## 4. Panduan Demonstrasi Presentasi (Pekan ke-7)
+## 4. Panduan Demonstrasi Presentasi
 
-1. **Buka Aplikasi `index.html`** (Aplikasi berjalan lokal secara penuh di *browser*, memuat Tab Lab Pohon terlebih dahulu).
-2. **Demo Lab Pohon:**
-   - Ubah salah satu bobot edge (*Click-to-Edit* angka lintasan) menjadi sangat besar.
-   - Jalankan A* dan peragakan mekanisme mesinnya mendeteksi pembengkakan biaya $f(n)$ lalu membatalkan rute tersebut (*pruning* rute mahal).
-3. **Demo Grid Logistik (Medan Berat):**
-   - Buat rintangan Sungai (+5) di tengah jalur dengan menggunakan *brush toolbar*.
-   - Jalankan **A*** dengan mode Step &rarr; Tunjukkan bagaimana perubahan cost medan memengaruhi nilai $g(n)$ dan $f(n)$.
-   - Buktikan A* memilih rute aspal dengan total cost terendah, bukan sekadar jarak geometris terdekat.
-4. **Demo TSP Logistik Pengiriman Nyata:**
-   - Edit cost pada badge jaringan jalan untuk mensimulasikan jalan lancar atau macet.
-   - Eksekusi simulasi dan tunjukkan animasi truk yang mengikuti edge jalan hingga semua toko dikunjungi lalu kembali ke gudang.
+1. **Buka `index.html`** (berjalan lokal penuh di browser, tab Lab Pohon terbuka duluan).
+2. **Demo Lab Pohon (optimal):**
+   - Jalankan Play/Step apa adanya; rute `A-B-E-K` cost 5 dinyatakan optimal karena $h$ admissible.
+3. **Demo Admissibility Alert (Lab Pohon):**
+   - Ubah $h(B)$ menjadi 9 (overestimate), jalankan ulang; tunjukkan ekspansi terbuang ke subtree mati, *Admissibility Alert*, dan hilangnya klaim "optimal". (Graf Tree tanpa siklus, sehingga demo ini menekankan deteksi overestimate, bukan re-open.)
+4. **Demo Re-open Closed Node (Fish, deterministik):**
+   - Buka `fish_astar.html?seed=7`, pilih mode Manual, set $h(N1)=100$ dan $h(N3)=100$, jalankan Step; tunjukkan log *Re-open N4* saat rute $g$ lebih murah ditemukan ke simpul tertutup.
+5. **Demo Grid (medan berat):**
+   - Pasang Sungai (+5) melintang dengan brush toolbar; jalankan Step; tunjukkan $g/f$ memilih rute aspal termurah.
+   - Tutup total jalur ke goal untuk mendemo status "Jalan Buntu" yang ditangani elegan.
+6. **Demo TSP:**
+   - Edit cost badge jalan (lancar/macet), eksekusi, tunjukkan tur mengunjungi semua toko dan kembali ke gudang; unduh tabel runut berekstensi `.xls`.
+7. **Demo Fish (opsional, mode presentasi):**
+   - Buka `fish_astar.html?seed=7`, aktifkan Mode Presentasi, mainkan Step/Back; ganti ke mode Euclidean untuk menunjukkan peringatan admissibility.
 
 ---
 
 ## 5. Kesimpulan
-Aplikasi web ini menyatukan pemodelan graf akademik, navigasi medan berbobot, dan TSP pada jaringan jalan statis dalam satu antarmuka. Fokus implementasi adalah A* Search dengan evaluasi $f(n)=g(n)+h(n)$ dan heuristik admissible untuk jaminan rute optimal.
+Aplikasi menyatukan graf akademik, navigasi medan berbobot, TSP road-graph, dan game pathfinding dalam satu prinsip: $f(n)=g(n)+h(n)$ dengan evaluasi jujur terhadap admissibility. Klaim "optimal" hanya ditampilkan bila $h$ terbukti tidak melebihi jarak nyata; bila tidak, aplikasi menampilkannya sebagai rute "tidak dijamin optimal" beserta simpul penyebabnya. Seluruh tabel runut ($g,h,f$, Open/Closed, keputusan) dapat diunduh sebagai `.xls` untuk lampiran laporan.
