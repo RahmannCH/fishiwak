@@ -18,7 +18,7 @@ Aplikasi dirancang memiliki modul pengujian independen:
 1. **Modul 1 (Default): Lab Pohon Heuristik (Custom):** graf pohon dengan bobot edge dan heuristik yang dapat diubah lewat *Click-to-Edit*, dilengkapi mekanisme *Re-Opening Closed Nodes* untuk heuristik inkonsisten.
 2. **Modul 2: Logistik Grid 2D (Medan Berat Non-Uniform Cost):** kurir menempuh rintangan spasial (Aspal = 1, Lumpur = 3, Sungai = 5, Tembok = tak terlewati) dengan metrik *Manhattan* dan *Euclidean*.
 3. **Modul 3: TSP Logistik (Pengiriman Realistis):** tur kurir yang wajib mengunjungi semua toko lalu kembali ke gudang melalui jaringan jalan; heuristik MST dihitung dari jarak jalan terpendek.
-4. **Modul 4 (Game): Sim Fish Shoes (`fish_astar.html`):** pathfinding ikan antar bangunan dengan tiga mode heuristik (Dijkstra eksak, Euclidean ilustratif, manual), *Step Back* per snapshot, dan ekspor tabel runut.
+4. **Modul 4 (Game): Sim Fish Shoes (`fish_astar.html`):** pathfinding ikan antar bangunan dengan tiga mode heuristik (Dijkstra eksak, Euclidean ilustratif, manual), *Step Back* per snapshot, dan ekspor tabel runut; ikan hanya boleh berjalan di atas jalan bercost dan mundur (backtrack) bila tidak ada jalan langsung.
 
 ---
 
@@ -72,6 +72,8 @@ Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ s
 - Start permanen Kos Kan; graf acak berbiji (*seed* via `?seed=`, misal `fish_astar.html?seed=7`) dan goal = node terjauh dari Start agar demo dapat diulang.
 - Mode Dijkstra menghitung $h$ eksak; mode Euclidean dan manual diawasi pemeriksa admissibility yang membandingkan $h$ dengan jarak Dijkstra nyata.
 - *Step Back* mengembalikan snapshot pra-ekspansi (struktur Open/Closed, tabel, log, posisi ikan); entri basi dibuang tanpa mengotori riwayat.
+- **Aturan gerak ikan:** ikan hanya menempuh jalan yang benar-benar ada. Setiap langkah menyorot jalan, menyalakan badge `cost` berwarna kuning, dan menuliskan baris log `Ikan menempuh N1 -> N4 (cost 3)`, sehingga tidak ada perpindahan tanpa biaya.
+- Karena urutan ekspansi A* ($f$ terkecil) tidak selalu berimpit dengan urutan jalan, bila simpul hasil ekspansi tidak bersebelahan dengan posisi ikan, ikan **mundur (backtrack)** ke node sebelumnya dulu, baru melanjutkan dari posisi terakhir — persis perilaku penelusuran Open List saat jalur mandek. Pergerakan ini murni visualisasi; $g(n)$ dihitung dari bobot jalan saat relaksasi, bukan dari animasi.
 
 ### E. Skrip Python pendukung
 - `app.py`: contoh grid **seragam** 4-arah (cost 1) dengan closed-set, tie-break $g$ terbesar, dan validasi ramah (buntu, start/goal di rintangan, start = goal). Varian medan berbobot hidup di `index.html`.
@@ -95,6 +97,7 @@ Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ s
    - Edit cost badge jalan (lancar/macet), eksekusi, tunjukkan tur mengunjungi semua toko dan kembali ke gudang; unduh tabel runut berekstensi `.xls`.
 7. **Demo Fish (opsional, mode presentasi):**
    - Buka `fish_astar.html?seed=7`, aktifkan Mode Presentasi, mainkan Step/Back; ganti ke mode Euclidean untuk menunjukkan peringatan admissibility.
+   - Pindah ke mode Manual dengan $h(n)=0$ (semua node), jalankan Step: urutan ekspansi menjalar ke simpul yang tidak bersebelahan, sehingga ikan **mundur (backtrack)** dulu dan tiap jalan yang ditempuh menyalakan badge cost + log `Ikan menempuh ... (cost ...)` — bukti tidak ada gerak gratis.
 
 ---
 
