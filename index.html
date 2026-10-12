@@ -698,6 +698,8 @@ function stepSim() {
 
     // Re-Opening Closed Nodes Logic (Anti-Inconsistent Heuristic Fix)
     // Entri basi (stale) dilewati dengan loop, bukan rekursi.
+    // Re-open sesungguhnya dilakukan saat relaxation (tree/grid/TSP: visited.delete sebelum push);
+    // cabang g < gScore di bawah hanya jaring pengaman bila entri dengan g lebih baik muncul.
     if (visited.has(cid)) {
       if (current.g > gScore[cid]) {
         continue;
@@ -1337,7 +1339,7 @@ function processTspStep(current) {
       gScore[returnState.stateKey] = tentativeG;
       const queued = frontier.toArray().find(state => state.stateKey === returnState.stateKey);
       if (queued) Object.assign(queued, returnState);
-      else frontier.push(returnState);
+      else { visited.delete(returnState.stateKey); frontier.push(returnState); }
       frontier.items.sort((a, b) => a.f - b.f || b.g - a.g);
       pushTraceRow('Gudang (pulang)', `${tspNodes.find(n=>n.id===cid).name}-Gudang (${stepDist.toFixed(1)})`, tentativeG, 0, f, 'Kembali ke depot');
     }
@@ -1358,11 +1360,13 @@ function processTspStep(current) {
       gScore[nextStateKey] = tentativeG;
       const state = { id: nextId, path: [...path, nextId], unvisited: nextUnv, g: tentativeG, h, f, stateKey: nextStateKey };
       const queued = frontier.toArray().find(item => item.stateKey === nextStateKey);
+      const reopened = !queued && visited.delete(nextStateKey);
       if (queued) Object.assign(queued, state);
       else frontier.push(state);
       frontier.items.sort((a, b) => a.f - b.f || b.g - a.g);
       addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Penilaian rute jalan ke <b>${tspNodes.find(n=>n.id===nextId).name}</b> (g=${tentativeG.toFixed(1)}, h=${h.toFixed(1)}, f=${f.toFixed(1)})`, '📋');
-      pushTraceRow(tspNodes.find(n=>n.id===nextId).name, `${tspNodes.find(n=>n.id===cid).name}-${tspNodes.find(n=>n.id===nextId).name} (${stepDist.toFixed(1)})`, tentativeG, h, f, 'Masuk Open List');
+      if (reopened) addLog(`&nbsp;&nbsp;&nbsp;&nbsp;↳ Re-open Closed Node: <b>${tspNodes.find(n=>n.id===nextId).name}</b> (f=${f.toFixed(1)})`, '🔓');
+      pushTraceRow(tspNodes.find(n=>n.id===nextId).name, `${tspNodes.find(n=>n.id===cid).name}-${tspNodes.find(n=>n.id===nextId).name} (${stepDist.toFixed(1)})`, tentativeG, h, f, reopened ? 'Re-open Closed Node' : 'Masuk Open List');
     }
   });
 }

@@ -150,6 +150,13 @@ if __name__ == "__main__":
     print("\nMenghitung rute terpendek dengan A* Search + MST Heuristic...")
     rute, total_jarak, total_iterasi = a_star_tsp(start=0)
 
+    if not rute:
+        print("\n" + "=" * 65)
+        print("STATUS SOLUSI     : GAGAL - TIDAK ADA RUTE")
+        print(f"JUMLAH ITERASI A* : {total_iterasi} ekspansi state")
+        print("=" * 65)
+        raise SystemExit(1)
+
     print("\n" + "=" * 65)
     print(f"STATUS SOLUSI     : OPTIMAL")
     print(f"TOTAL JARAK TEMPUH: {total_jarak:.3f} satuan jarak (km)")
