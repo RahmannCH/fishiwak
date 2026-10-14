@@ -45,7 +45,7 @@ Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ s
 | TSP Python | MST di atas graf lengkap Euclidean | Admissible | Ya |
 | Fish mode Dijkstra | Jarak jalan nyata ke Goal ($h = h^*$) | Eksak, admissible | Ya |
 | Fish mode Euclidean | Jarak piksel/45, ilustratif | **Tidak dijamin** admissible; aplikasi memberi peringatan | Tidak dijamin |
-| Fish mode manual | Bebas | Bisa inadmissible; aplikasi memberi peringatan | Hanya jika $h \le h^*$ |
+| Fish mode manual | Mulai dari nol (semua cost jalan & $h=0$), bebas isi dari awal; kembali ke Manual setelah mengisi memicu peringatan inline + tombol konfirmasi | Bisa inadmissible; aplikasi memberi peringatan | Hanya jika $h \le h^*$ |
 
 ---
 
@@ -89,7 +89,7 @@ Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ s
 3. **Demo Admissibility Alert (Lab Pohon):**
    - Ubah $h(B)$ menjadi 9 (overestimate), jalankan ulang; tunjukkan ekspansi terbuang ke subtree mati, *Admissibility Alert*, dan hilangnya klaim "optimal". (Graf Tree tanpa siklus, sehingga demo ini menekankan deteksi overestimate, bukan re-open.)
 4. **Demo Re-open Closed Node (Fish, deterministik):**
-   - Buka `fish_astar.html?seed=7`, pilih mode Manual, set $h(N1)=100$ dan $h(N3)=100$, jalankan Step; tunjukkan log *Re-open N4* saat rute $g$ lebih murah ditemukan ke simpul tertutup.
+   - Buka `fish_astar.html?seed=7`, pilih mode Manual (semua cost & $h$ otomatis 0), isi cost jalan S-N1=4, S-N2=5, N1-N3=6, N1-N4=2, N4-N5=2, N2-N4=7, N3-N4=4, lalu set $h(N1)=100$ dan $h(N3)=100$; jalankan Step; tunjukkan log *Re-open N4* saat rute $g$ lebih murah ditemukan ke simpul tertutup.
 5. **Demo Grid (medan berat):**
    - Pasang Sungai (+5) melintang dengan brush toolbar; jalankan Step; tunjukkan $g/f$ memilih rute aspal termurah.
    - Tutup total jalur ke goal untuk mendemo status "Jalan Buntu" yang ditangani elegan.
@@ -97,7 +97,7 @@ Aturan tie-break yang dipakai aplikasi web: $f$ terkecil didahulukan; jika $f$ s
    - Edit cost badge jalan (lancar/macet), eksekusi, tunjukkan tur mengunjungi semua toko dan kembali ke gudang; unduh tabel runut berekstensi `.xls`.
 7. **Demo Fish (opsional, mode presentasi):**
    - Buka `fish_astar.html?seed=7`, aktifkan Mode Presentasi, mainkan Step/Back; ganti ke mode Euclidean untuk menunjukkan peringatan admissibility.
-   - Pindah ke mode Manual dengan $h(n)=0$ (semua node), jalankan Step: urutan ekspansi menjalar ke simpul yang tidak bersebelahan, sehingga ikan **mundur (backtrack)** dulu dan tiap jalan yang ditempuh menyalakan badge cost + log `Ikan menempuh ... (cost ...)` — bukti tidak ada gerak gratis.
+   - Pindah ke mode Manual (semua cost & $h(n)$ otomatis 0 — blank slate bawaan mode ini), jalankan Step: urutan ekspansi menjalar ke simpul yang tidak bersebelahan, sehingga ikan **mundur (backtrack)** dulu dan tiap jalan yang ditempuh menyalakan badge cost + log `Ikan menempuh ... (cost ...)` — bukti tidak ada gerak gratis.
 
 ---
 
